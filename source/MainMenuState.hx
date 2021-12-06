@@ -34,6 +34,8 @@ class MainMenuState extends MusicBeatState
 	var magenta:FlxSprite;
 	var camFollow:FlxObject;
 
+	public static var xGenVersion:String = "0.0.1";
+
 	override function create()
 	{
 		#if desktop
