@@ -4,6 +4,8 @@ import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
 import openfl.utils.AssetType;
 import openfl.utils.Assets as OpenFlAssets;
+import flixel.graphics.FlxGraphic;
+import haxe.Json;
 
 class Paths
 {
@@ -79,6 +81,33 @@ class Paths
 	{
 		return sound(key + FlxG.random.int(min, max), library);
 	}
+	static public function loadImage(key:String, ?library:String):FlxGraphic
+		{
+			var path = image(key, library);
+	
+			#if FEATURE_FILESYSTEM
+			if (Caching.bitmapData != null)
+			{
+				if (Caching.bitmapData.exists(key))
+				{
+					Debug.logTrace('Loading image from bitmap cache: $key');
+					// Get data from cache.
+					return Caching.bitmapData.get(key);
+				}
+			}
+			#end
+	
+			if (OpenFlAssets.exists(path, IMAGE))
+			{
+				var bitmap = OpenFlAssets.getBitmapData(path);
+				return FlxGraphic.fromBitmapData(bitmap);
+			}
+			else
+			{
+				trace('Could not find image at path $path');
+				return null;
+			}
+		}
 
 	inline static public function music(key:String, ?library:String)
 	{
@@ -98,6 +127,11 @@ class Paths
 	inline static public function image(key:String, ?library:String)
 	{
 		return getPath('images/$key.png', IMAGE, library);
+	}
+	
+	inline static public function imageJpg(key:String, ?library:String)
+	{
+		return getPath('images/$key.jpg', IMAGE, library);
 	}
 
 	inline static public function font(key:String)
