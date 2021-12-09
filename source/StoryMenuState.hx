@@ -22,7 +22,7 @@ class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
 
-	var weekData:Array<Dynamic> = [
+	var weekData:Array<Dynamic>  = [
 		['Tutorial'],
 		['Bopeebo', 'Fresh', 'Dadbattle'],
 		['Spookeez', 'South', "Monster"],
@@ -30,10 +30,11 @@ class StoryMenuState extends MusicBeatState
 		['Satin-Panties', "High", "Milf"],
 		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
 		['Senpai', 'Roses', 'Thorns']
-	];
+	]; 
 	var curDifficulty:Int = 1;
 
 	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true];
+
 
 	var weekCharacters:Array<Dynamic> = [
 		['dad', 'bf', 'gf'],
@@ -45,7 +46,7 @@ class StoryMenuState extends MusicBeatState
 		['senpai', 'bf', 'gf']
 	];
 
-	var weekNames:Array<String> = [
+	var weekNames:Array<String> = CoolUtil.coolTextFile(Paths.txt('weekNames'));/*[
 		"",
 		"Daddy Dearest",
 		"Spooky Month",
@@ -53,7 +54,7 @@ class StoryMenuState extends MusicBeatState
 		"MOMMY MUST MURDER",
 		"RED SNOW",
 		"hating simulator ft. moawling"
-	];
+	]; */
 
 	var txtWeekTitle:FlxText;
 
@@ -111,7 +112,7 @@ class StoryMenuState extends MusicBeatState
 		grpLocks = new FlxTypedGroup<FlxSprite>();
 		add(grpLocks);
 
-		trace("Line 70");
+		("Line 70");
 		
 		#if desktop
 		// Updating Discord Rich Presence

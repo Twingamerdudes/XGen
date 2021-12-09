@@ -115,8 +115,10 @@ class PlayState extends MusicBeatState
 	var talking:Bool = true;
 	var songScore:Int = 0;
 	var songAccuracy:Float = 0;
+	var songComboBreaks:Int = 0;
 	var scoreTxt:FlxText;
 	var songNameTxt:FlxText;
+	var comboBreaksTxt:FlxText;
 	var accurayTxt:FlxText;
 
 	public static var campaignScore:Int = 0;
@@ -736,10 +738,15 @@ class PlayState extends MusicBeatState
 		// healthBar
 		add(healthBar);
 
-		scoreTxt = new FlxText(/*healthBarBG.x + healthBarBG.width - 130 */ 700, healthBarBG.y + 30, 0, "", 20);
+		scoreTxt = new FlxText(/*healthBarBG.x + healthBarBG.width - 130 */ 500, healthBarBG.y + 30, 0, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
 		scoreTxt.scrollFactor.set();
 		add(scoreTxt);
+
+		comboBreaksTxt = new FlxText(650, healthBarBG.y + 30, 0, "", 20);
+		comboBreaksTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
+		comboBreaksTxt.scrollFactor.set();
+		add(comboBreaksTxt);
 
 		songNameTxt = new FlxText(/*healthBarBG.x + healthBarBG.width - 130 */ 50, healthBarBG.y + 30, 0, "", 20);
 		songNameTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT);
@@ -768,6 +775,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.cameras = [camHUD];
 		songNameTxt.cameras = [camHUD];
 		accurayTxt.cameras = [camHUD];
+		comboBreaksTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
 
 		// if (SONG.song == 'South')
@@ -1386,6 +1394,7 @@ class PlayState extends MusicBeatState
 		scoreTxt.text = "Score:" + songScore;
 		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.1";
 		accurayTxt.text = "Accuracy: %" + songAccuracy;
+		comboBreaksTxt.text = "Combo breaks: " + songComboBreaks;
 
 		if (FlxG.keys.justPressed.ENTER && startedCountdown && canPause)
 		{
@@ -1755,7 +1764,7 @@ class PlayState extends MusicBeatState
 
 				if (SONG.validScore)
 				{
-					NGio.unlockMedal(60961);
+					//NGio.unlockMedal(60961);
 					Highscore.saveWeekScore(storyWeek, campaignScore, storyDifficulty);
 				}
 
@@ -1832,19 +1841,27 @@ class PlayState extends MusicBeatState
 		{
 			daRating = 'shit';
 			score = 50;
-			accuracy = -2.25;
+			accuracy = -2.25 - songComboBreaks - 0.5;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.75)
 		{
 			daRating = 'bad';
 			score = 100;
-			accuracy = -1.15;
+			accuracy = -1.15 - songComboBreaks - 1;
 		}
 		else if (noteDiff > Conductor.safeZoneOffset * 0.2)
 		{
 			daRating = 'good';
 			score = 200;
-			accuracy = 1.15;
+			if(songComboBreaks < 2){
+				accuracy = 1.15 - songComboBreaks - 1;
+			}else{
+				accuracy = 0.5;
+			}
+		}if(songComboBreaks < 3 && accuracy == 2.25){
+			accuracy = accuracy - songComboBreaks - 1;
+		}else{
+			accuracy = 1.2;
 		}
 
 		songScore += score;
@@ -2182,7 +2199,8 @@ class PlayState extends MusicBeatState
 		if (!boyfriend.stunned)
 		{
 			//health -= 0.04;
-			songAccuracy -= 2.25;
+			songComboBreaks += 1;
+			songAccuracy -= 2.25 + songComboBreaks - 1;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
 			{
 				gf.playAnim('sad');

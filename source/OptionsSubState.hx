@@ -9,7 +9,7 @@ import flixel.addons.transition.FlxTransitionableState;
 
 class OptionsSubState extends MusicBeatSubstate
 {
-	var textMenuItems:Array<String> = ['Master Volume', 'Sound Volume', 'Controls', 'Back'];
+	var textMenuItems:Array<String> = ['Controls', 'Preferences', 'Back'];
 
 	var selector:FlxSprite;
 	var curSelected:Int = 0;
@@ -70,6 +70,9 @@ class OptionsSubState extends MusicBeatSubstate
 				case "Controls":
 					FlxG.state.closeSubState();
 					FlxG.state.openSubState(new ControlsSubState());
+				case "Preferences":
+					FlxG.state.closeSubState();
+					FlxG.state.openSubState(new PreferencesSubState());
 				case "Back":
 					FlxG.switchState(new MainMenuState());
 			}

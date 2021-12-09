@@ -2,5 +2,5 @@ package;
 
 class Options
 {
-	public static var masterVolume:Float = 1;
+	public var ghostTappingEnabled:Bool = true;
 }
