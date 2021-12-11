@@ -123,7 +123,6 @@ class PlayState extends MusicBeatState
 	var comboBreaksTxt:FlxText;
 	var accurayTxt:FlxText;
 
-	var firstNote:Bool = false;
 
 	public static var campaignScore:Int = 0;
 
@@ -1735,11 +1734,6 @@ class PlayState extends MusicBeatState
 							noteMiss(daNote.noteData);
 							vocals.volume = 0;
 						}
-					}else{
-						if(firstNote == false){
-							songAccuracy = 100;
-						}
-						firstNote = true;
 					}
 
 					daNote.active = false;
@@ -2225,9 +2219,12 @@ class PlayState extends MusicBeatState
 
 	public function noteMiss(direction:Int = 1):Void
 	{
+		var optionsFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('options/ghost'));
 		if (!boyfriend.stunned)
 		{
-			//health -= 0.04;
+			if(!optionsFile.contains('ghost')){
+				health -= 0.04;
+			}
 			songComboBreaks += 1;
 			songAccuracy -= 2.25 + songComboBreaks - 1;
 			if (combo > 5 && gf.animOffsets.exists('sad'))
@@ -2272,6 +2269,17 @@ class PlayState extends MusicBeatState
 		var rightP = controls.RIGHT_P;
 		var downP = controls.DOWN_P;
 		var leftP = controls.LEFT_P;
+		var optionsFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('options/ghost'));
+		if(!optionsFile.contains('ghost')){
+			if (leftP)
+				noteMiss(0);
+			if (downP)
+				noteMiss(1);
+			if (upP)
+				noteMiss(2);
+			if (rightP)
+				noteMiss(3);
+		}
 	}
 
 	function noteCheck(keyP:Bool, note:Note):Void

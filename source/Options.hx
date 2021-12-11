@@ -19,10 +19,14 @@ class Options extends FlxSubState
 
 
 	var botplayOptionsEnabledTxt:FlxText;
+	var ghostTappingEnabledTxt:FlxText;
 
 
 	var botplayOnOrOff:String = "On";
-	var optionsFileCurrent:String = Assets.getText(Paths.txt('options/botplay'));
+	var ghostTappingOnOrOff:String = "On";
+
+	var botplayOnOrOffCurrent:String = Assets.getText(Paths.txt('options/botplay'));
+	var ghostTappingOnOrOffCurrent:String = Assets.getText(Paths.txt('options/ghost'));
 
 	public static var MUSICBEATSTATE:MusicBeatState;
 	public function new()
@@ -45,12 +49,23 @@ class Options extends FlxSubState
 		botplayOptionsEnabledTxt = new FlxText(350, 70, 0, "", 32);
 		botplayOptionsEnabledTxt.scrollFactor.set();
 		add(botplayOptionsEnabledTxt);
-		if(optionsFileCurrent == "botplay"){
+
+		ghostTappingEnabledTxt = new FlxText(350, 20, 0, "", 32);
+		ghostTappingEnabledTxt.scrollFactor.set();
+		add(ghostTappingEnabledTxt);
+
+		if(botplayOnOrOffCurrent == "botplay"){
 			botplayOnOrOff = "On";
 		}else{
 			botplayOnOrOff = "Off";
 		} 
+		if(ghostTappingOnOrOffCurrent == "ghost"){
+			ghostTappingOnOrOff = "On";
+		}else{
+			ghostTappingOnOrOff = "Off";
+		} 
 		botplayOptionsEnabledTxt.text = botplayOnOrOff;
+		ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
 	}
 	override function update(elapsed:Float)
 		{
@@ -100,6 +115,24 @@ class Options extends FlxSubState
 							botplayOnOrOff = "Off";
 						} 
 						botplayOptionsEnabledTxt.text = botplayOnOrOff;
+					case "Ghost Tapping":
+						var optionsFile:String = Assets.getText(Paths.txt('options/ghost'));
+						trace(optionsFile);
+						if(optionsFile != "ghost"){
+							trace("here");
+							optionsFile = "ghost";
+							sys.io.File.saveContent(Paths.txt('options/ghost'), optionsFile);
+						}else{
+							trace("should be removed");
+							optionsFile = "";
+							sys.io.File.saveContent(Paths.txt('options/ghost'), optionsFile);
+						}
+						if(optionsFile == "ghost"){
+							ghostTappingOnOrOff = "On";
+						}else{
+							ghostTappingOnOrOff= "Off";
+						} 
+						ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
 					case "Back":
 						FlxG.state.openSubState(new OptionsSubState());
 				}
