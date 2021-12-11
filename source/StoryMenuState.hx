@@ -429,12 +429,14 @@ class StoryMenuState extends MusicBeatState
 		}
 
 		var stringThing:Array<String> = weekData[curWeek];
-
-		for (i in stringThing)
+		var lastText:Int = 0;
+		var i:Int = 0;
+		for (v in stringThing)
 		{
-			txtTracklist.text += "\n" + i;
+			txtTracklist.text += "\n" + v;
+			i = i + 1;
 		}
-
+		txtTracklist.text += "\n" + stringThing[i + 1];
 		txtTracklist.text = txtTracklist.text.toUpperCase();
 
 		txtTracklist.screenCenter(X);

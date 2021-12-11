@@ -1,4 +1,4 @@
-package;
+/*package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -11,7 +11,7 @@ import Options;
 
 class PreferencesSubState extends FlxSubState
 {
-	var textMenuItems:Array<String> = ['Ghost Tapping', 'Back'];
+	var textMenuItems:Array<String> = ['Ghost Tapping', 'Botplay', 'Back'];
 
 	var selector:FlxSprite;
 	var curSelected:Int = 0;
@@ -42,9 +42,9 @@ class PreferencesSubState extends FlxSubState
 			optionText.ID = i;
 			grpOptionsTexts.add(optionText);
 		}
-		/*ghostTappingOptionEnabledTxt = new FlxText(350, 20, 0, "", 32);
+		ghostTappingOptionEnabledTxt = new FlxText(350, 20, 0, "", 32);
 		ghostTappingOptionEnabledTxt.scrollFactor.set();
-		add(ghostTappingOptionEnabledTxt); */
+		add(ghostTappingOptionEnabledTxt); 
 	}
 	override function update(elapsed:Float)
 		{
@@ -73,26 +73,25 @@ class PreferencesSubState extends FlxSubState
 					txt.color = FlxColor.YELLOW;
 			});
 			//ghostTappingOptionEnabledTxt.text = ghostTappingOnOrOff;
-
-			/*if(OPTIONS.ghostTappingEnabled == true){
+			if(OPTIONS.ghostTappingEnabled == true){
 				ghostTappingOnOrOff = "On";
 			}else{
 				ghostTappingOnOrOff = "Off";
-			} */
+			} 
 	
 			if (MUSICBEATSTATE.controls.ACCEPT)
 			{
 				switch (textMenuItems[curSelected])
 				{
-					case "Ghost Tapping":
-						if(OPTIONS.ghostTappingEnabled == true){
-							OPTIONS.ghostTappingEnabled = false;
+					case "Botplay":
+						if(OPTIONS.botPlay == true){
+							OPTIONS.botPlay = false;
 						}else{
-							OPTIONS.ghostTappingEnabled = true;
+							OPTIONS.botPlay= true;
 						}
 					case "Back":
 						FlxG.state.openSubState(new OptionsSubState());
 				}
 			}
 		}
-}
+} */

@@ -36,6 +36,7 @@ class OptionsSubState extends MusicBeatSubstate
 		}
 	}
 
+
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -72,7 +73,7 @@ class OptionsSubState extends MusicBeatSubstate
 					FlxG.state.openSubState(new ControlsSubState());
 				case "Preferences":
 					FlxG.state.closeSubState();
-					FlxG.state.openSubState(new PreferencesSubState());
+					FlxG.state.openSubState(new Options());
 				case "Back":
 					FlxG.switchState(new MainMenuState());
 			}

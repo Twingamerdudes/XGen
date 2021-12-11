@@ -35,12 +35,12 @@ class FreeplayState extends MusicBeatState
 
 	override function create()
 	{
-		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
+		/*var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
 
 		for (i in 0...initSonglist.length)
 		{
 			songs.push(new SongMetadata(initSonglist[i], 1, 'gf'));
-		}
+		} */
 
 		/* 
 			if (FlxG.sound.music != null)
@@ -60,8 +60,33 @@ class FreeplayState extends MusicBeatState
 		#if debug
 		isDebug = true;
 		#end
-
-		if (StoryMenuState.weekUnlocked[2] || isDebug)
+		//addWeek(['Tutorial'], 0, ['gf']);
+		var freePlayFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
+		var freePlayIcons:Array<String> = CoolUtil.coolTextFile(Paths.txt('freeplayIcons'));
+		var i:Int = 0;
+		var exists:Bool = false;
+		for (v in freePlayFile){
+			if(i == freePlayFile.length) break;
+			var tempArray:Array<String> = freePlayFile[i].split(',');
+			var tempArray2:Array<String> = freePlayIcons[i].split(',');
+			/*try{
+				var r:Int = 0;
+				for(e in tempArray){
+					r = r + 1;
+					trace(tempArray[r].toLowerCase());
+					var throwaway:Array<String> = CoolUtil.coolTextFile(Paths.json(tempArray[r].toLowerCase()));
+				}
+				exists = true;
+			}catch(e){
+				exists = false;
+			}
+			if(exists == true){ */
+			addWeek(tempArray, i, tempArray2);
+			//}
+			//exists = false;
+			i = i + 1;
+		}
+		/*if (StoryMenuState.weekUnlocked[2] || isDebug)
 			addWeek(['Bopeebo', 'Fresh', 'Dadbattle'], 1, ['dad']);
 
 		if (StoryMenuState.weekUnlocked[2] || isDebug)
@@ -77,7 +102,7 @@ class FreeplayState extends MusicBeatState
 			addWeek(['Cocoa', 'Eggnog', 'Winter-Horrorland'], 5, ['parents-christmas', 'parents-christmas', 'monster-christmas']);
 
 		if (StoryMenuState.weekUnlocked[6] || isDebug)
-			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']);
+			addWeek(['Senpai', 'Roses', 'Thorns'], 6, ['senpai', 'senpai', 'spirit']); */
 
 		// LOAD MUSIC
 

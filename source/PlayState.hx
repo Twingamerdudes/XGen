@@ -41,7 +41,7 @@ import lime.utils.Assets;
 import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
-
+import Options;
 using StringTools;
 
 class PlayState extends MusicBeatState
@@ -97,6 +97,8 @@ class PlayState extends MusicBeatState
 	var halloweenBG:FlxSprite;
 	var isHalloween:Bool = false;
 
+	var OPTIONS:Options;
+
 	var phillyCityLights:FlxTypedGroup<FlxSprite>;
 	var phillyTrain:FlxSprite;
 	var trainSound:FlxSound;
@@ -120,6 +122,8 @@ class PlayState extends MusicBeatState
 	var songNameTxt:FlxText;
 	var comboBreaksTxt:FlxText;
 	var accurayTxt:FlxText;
+
+	var firstNote:Bool = false;
 
 	public static var campaignScore:Int = 0;
 
@@ -1703,14 +1707,39 @@ class PlayState extends MusicBeatState
 
 				// WIP interpolation shit? Need to fix the pause issue
 				// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
+				var optionsFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('options/botplay'));
+				if(daNote.canBeHit && optionsFile.contains('botplay')){
+					switch (Math.abs(daNote.noteData))
+					{
+						case 0:
+							boyfriend.playAnim('singLEFT', true);
+						case 1:
+							boyfriend.playAnim('singDOWN', true);
+						case 2:
+							boyfriend.playAnim('singUP', true);
+						case 3:
+							boyfriend.playAnim('singRIGHT', true);
+					}
+					
+					daNote.kill();
+					notes.remove(daNote, true);
+					daNote.destroy();
+				}
 
 				if (daNote.y < -daNote.height)
 				{
 					if (daNote.tooLate || !daNote.wasGoodHit)
 					{
-						health -= 0.0475;
-						noteMiss(daNote.noteData);
-						vocals.volume = 0;
+						if(!optionsFile.contains('botplay')){
+							health -= 0.0475;
+							noteMiss(daNote.noteData);
+							vocals.volume = 0;
+						}
+					}else{
+						if(firstNote == false){
+							songAccuracy = 100;
+						}
+						firstNote = true;
 					}
 
 					daNote.active = false;
