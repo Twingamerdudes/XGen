@@ -22,21 +22,22 @@ class StoryMenuState extends MusicBeatState
 {
 	var scoreText:FlxText;
 
-	var weekData:Array<Dynamic>  = [
+	var weekData:Array<String> = CoolUtil.coolTextFile(Paths.txt('weekData'));
+	 /*[
 		['Tutorial'],
 		['Bopeebo', 'Fresh', 'Dadbattle'],
 		['Spookeez', 'South', "Monster"],
 		['Pico', 'Philly', "Blammed"],
 		['Satin-Panties', "High", "Milf"],
 		['Cocoa', 'Eggnog', 'Winter-Horrorland'],
-		['Senpai', 'Roses', 'Thorns']
-	]; 
+		['Senpai', 'Roses', 'Thorns'] 
+	]; 	*/ 
 	var curDifficulty:Int = 1;
 
 	public static var weekUnlocked:Array<Bool> = [true, true, true, true, true, true, true];
 
 
-	var weekCharacters:Array<Dynamic> = [
+	var weekCharacters:Array<String> = CoolUtil.coolTextFile(Paths.txt('weekCharacters'));/*[
 		['dad', 'bf', 'gf'],
 		['dad', 'bf', 'gf'],
 		['spooky', 'bf', 'gf'],
@@ -44,7 +45,7 @@ class StoryMenuState extends MusicBeatState
 		['mom', 'bf', 'gf'],
 		['parents-christmas', 'bf', 'gf'],
 		['senpai', 'bf', 'gf']
-	];
+	]; */
 
 	var weekNames:Array<String> = CoolUtil.coolTextFile(Paths.txt('weekNames'));/*[
 		"",
@@ -74,6 +75,9 @@ class StoryMenuState extends MusicBeatState
 
 	override function create()
 	{
+		/*for(i in 0...weekData.length){
+			weekData[i].split(',');
+		} */
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
@@ -147,7 +151,7 @@ class StoryMenuState extends MusicBeatState
 
 		for (char in 0...3)
 		{
-			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, weekCharacters[curWeek][char]);
+			var weekCharacterThing:MenuCharacter = new MenuCharacter((FlxG.width * 0.25) * (1 + char) - 150, weekCharacters[curWeek].split(',')[char]);
 			weekCharacterThing.y += 70;
 			weekCharacterThing.antialiasing = true;
 			switch (weekCharacterThing.character)
@@ -305,7 +309,7 @@ class StoryMenuState extends MusicBeatState
 				stopspamming = true;
 			}
 
-			PlayState.storyPlaylist = weekData[curWeek];
+			PlayState.storyPlaylist = weekData[curWeek].split(',');
 			PlayState.isStoryMode = true;
 			selectedWeek = true;
 
@@ -399,9 +403,9 @@ class StoryMenuState extends MusicBeatState
 
 	function updateText()
 	{
-		grpWeekCharacters.members[0].animation.play(weekCharacters[curWeek][0]);
-		grpWeekCharacters.members[1].animation.play(weekCharacters[curWeek][1]);
-		grpWeekCharacters.members[2].animation.play(weekCharacters[curWeek][2]);
+		grpWeekCharacters.members[0].animation.play(weekCharacters[curWeek].split(',')[0]);
+		grpWeekCharacters.members[1].animation.play(weekCharacters[curWeek].split(',')[1]);
+		grpWeekCharacters.members[2].animation.play(weekCharacters[curWeek].split(',')[2]);
 		txtTracklist.text = "Tracks\n";
 
 		switch (grpWeekCharacters.members[0].animation.curAnim.name)
@@ -428,7 +432,7 @@ class StoryMenuState extends MusicBeatState
 				// grpWeekCharacters.members[0].updateHitbox();
 		}
 
-		var stringThing:Array<String> = weekData[curWeek];
+		var stringThing:Array<String> = weekData[curWeek].split(',');
 		var lastText:Int = 0;
 		var i:Int = 0;
 		for (v in stringThing)

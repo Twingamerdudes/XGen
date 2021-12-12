@@ -52,10 +52,12 @@ class Paths
 		return 'assets/$file';
 	}
 
+
 	inline static public function file(file:String, type:AssetType = TEXT, ?library:String)
 	{
 		return getPath(file, type, library);
 	}
+
 
 	inline static public function txt(key:String, ?library:String)
 	{
@@ -143,6 +145,7 @@ class Paths
 	{
 		return FlxAtlasFrames.fromSparrow(image(key, library), file('images/$key.xml', library));
 	}
+
 
 	inline static public function getPackerAtlas(key:String, ?library:String)
 	{

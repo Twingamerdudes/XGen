@@ -9,6 +9,7 @@ import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.ui.FlxInputText;
 import flixel.addons.ui.FlxUI9SliceSprite;
 import flixel.addons.ui.FlxUI;
+import flixel.addons.ui.FlxUIText;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
@@ -120,7 +121,9 @@ class ChartingState extends MusicBeatState
 				player1: 'bf',
 				player2: 'dad',
 				speed: 1,
-				validScore: false
+				validScore: false,
+				healthDrain: 0,
+				healthCheck: true
 			};
 		}
 
@@ -150,6 +153,7 @@ class ChartingState extends MusicBeatState
 		add(dummyArrow);
 
 		var tabs = [
+			{name: "Extra", label: 'Extra'},
 			{name: "Song", label: 'Song'},
 			{name: "Section", label: 'Section'},
 			{name: "Note", label: 'Note'}
@@ -162,6 +166,7 @@ class ChartingState extends MusicBeatState
 		UI_box.y = 20;
 		add(UI_box);
 
+		addExtraUI();
 		addSongUI();
 		addSectionUI();
 		addNoteUI();
@@ -171,7 +176,38 @@ class ChartingState extends MusicBeatState
 
 		super.create();
 	}
+	
+	function addExtraUI():Void
+	{
+		var tab_group_note = new FlxUI(null, UI_box);
+		tab_group_note.name = 'Extra';
 
+		var drainTxt:FlxUIText = new FlxUIText(20, 10, 500, "Health drain", 8, true);
+		drainTxt.name = 'health_drain_text';
+
+		var drain:FlxUINumericStepper = new FlxUINumericStepper(20, 30, 0.01, 10, 0, 1, 2);
+		drain.value = _song.healthDrain;
+		drain.name = 'health_drain';
+
+
+		var check_healthCheck = new FlxUICheckBox(20, 50, null, null, "Health Check", 100);
+		check_healthCheck.name = 'check_healthCheck';
+		check_healthCheck.checked = _song.healthCheck;
+
+
+		var applyButton:FlxButton = new FlxButton(20, 90, "Apply", function()
+		{
+			_song.healthDrain = drain.value;
+			_song.healthCheck = check_healthCheck.checked;
+		});
+
+		tab_group_note.add(drainTxt);
+		tab_group_note.add(drain);
+		tab_group_note.add(applyButton);
+		tab_group_note.add(check_healthCheck);
+
+		UI_box.addGroup(tab_group_note);
+	}
 	function addSongUI():Void
 	{
 		var UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
@@ -855,7 +891,6 @@ class ChartingState extends MusicBeatState
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
 			var daSus = i[2];
-
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4);
 			note.sustainLength = daSus;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);

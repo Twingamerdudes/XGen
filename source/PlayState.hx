@@ -144,6 +144,7 @@ class PlayState extends MusicBeatState
 
 	override public function create()
 	{
+		FlxG.mouse.visible = false;
 		if (FlxG.sound.music != null)
 			FlxG.sound.music.stop();
 
@@ -326,11 +327,11 @@ class PlayState extends MusicBeatState
 		                  overlayShit.alpha = 0.5;
 		                  // add(overlayShit);
 
-		                  // var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
+		                  //var shaderBullshit = new BlendModeEffect(new OverlayShader(), FlxColor.RED);
 
-		                  // FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
+		                  //FlxG.camera.setFilters([new ShaderFilter(cast shaderBullshit.shader)]);
 
-		                  // overlayShit.shader = shaderBullshit;
+		                  //overlayShit.shader = shaderBullshit;
 
 		                  var limoTex = Paths.getSparrowAtlas('limo/limoDrive');
 
@@ -2509,7 +2510,13 @@ class PlayState extends MusicBeatState
 			boyfriend.playAnim('hey', true);
 			dad.playAnim('cheer', true);
 		}
-
+		if(SONG.healthCheck == true){
+			if(health >= 0.25){
+				health -=  SONG.healthDrain;
+			}
+		}else{
+			health -=  SONG.healthDrain;
+		}
 		switch (curStage)
 		{
 			case 'school':
