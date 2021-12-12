@@ -6,6 +6,7 @@ import flixel.FlxSubState;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
+import Controls.Control;
 import MusicBeatState;
 
 class ControlsSubState extends FlxSubState

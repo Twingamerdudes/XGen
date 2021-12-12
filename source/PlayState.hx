@@ -1720,7 +1720,7 @@ class PlayState extends MusicBeatState
 						case 3:
 							boyfriend.playAnim('singRIGHT', true);
 					}
-					
+					health += 0.023;
 					daNote.kill();
 					notes.remove(daNote, true);
 					daNote.destroy();

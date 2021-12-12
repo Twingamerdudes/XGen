@@ -320,6 +320,10 @@ class TitleState extends MusicBeatState
 	
 					http.request();
 				});
+			var messageFile:Array<String> = CoolUtil.coolTextFile(Paths.txt('message'));
+			if(messageFile[0] != "" && !MessageSubState.leftStateMessage){
+				FlxG.switchState(new MessageSubState());
+			}
 			// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 		}
 

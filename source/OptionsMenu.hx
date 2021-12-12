@@ -78,7 +78,7 @@ class OptionsMenu extends MusicBeatState
 		 */
 	}
 
-	function waitingInput():Void
+	public function waitingInput():Void
 	{
 		if (FlxG.keys.getIsDown().length > 0)
 		{
