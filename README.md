@@ -7,6 +7,7 @@ Welcome to XGen, a FNF engine that is currelnty in alpha. Current version is 0.0
 - Song name displayed while playing game
 - Options menu
 - Botplay
+- Health drain
 
 ## Credits
 1. ninjamuffin99 - for FNF itself
