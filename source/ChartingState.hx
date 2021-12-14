@@ -214,6 +214,7 @@ class ChartingState extends MusicBeatState
 		tab_group_note.add(applyButton);
 		tab_group_note.add(check_healthCheck);
 		tab_group_note.add(check_arrowsHidden);
+		tab_group_note.add(arrowHideText);
 
 		UI_box.addGroup(tab_group_note);
 	}

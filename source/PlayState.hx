@@ -2030,6 +2030,85 @@ class PlayState extends MusicBeatState
 			},
 			startDelay: Conductor.crochet * 0.001
 		});
+		try{
+			var sectionEvents = CoolUtil.coolTextFile(Paths.txt(curSong.toLowerCase() + '/sectionEvent'));
+			for(i in 0...sectionEvents.length){
+				if(sectionEvents[i].contains(Std.string(curSection))){
+					/*if(sectionEvents[i].contains("dad =")){
+						dad = null;
+						dad = new Character(100, 100, sectionEvents[i].substring(sectionEvents[i].indexOf('=') + 2));
+						var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
+						switch (SONG.player2)
+						{
+							case 'gf':
+								dad.setPosition(gf.x, gf.y);
+								gf.visible = false;
+							if (isStoryMode)
+							{
+								camPos.x += 600;
+								tweenCamIn();
+							}
+
+							case "spooky":
+								dad.y += 200;
+							case "monster":
+								dad.y += 100;
+							case 'monster-christmas':
+								dad.y += 130;
+							case 'dad':
+								camPos.x += 400;
+							case 'pico':
+								camPos.x += 600;
+								dad.y += 300;
+							case 'parents-christmas':
+								dad.x -= 500;
+							case 'senpai':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'senpai-angry':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'spirit':
+								dad.x -= 150;
+								dad.y += 100;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+						}
+					} */
+					if(sectionEvents[i].contains("health -=")){
+						health -= Std.parseFloat(sectionEvents[i].substring(sectionEvents[i].indexOf('=') + 2));
+					}
+					if(sectionEvents[i].contains("health +=")){
+						health += Std.parseFloat(sectionEvents[i].substring(sectionEvents[i].indexOf('=') + 2));
+					}
+					if(sectionEvents[i].contains("health =")){
+						health = Std.parseFloat(sectionEvents[i].substring(sectionEvents[i].indexOf('=') + 2));
+					}
+					if(sectionEvents[i].contains("drain =")){
+						SONG.healthDrain = Std.parseFloat(sectionEvents[i].substring(sectionEvents[i].indexOf('=') + 2));
+					}
+					if(sectionEvents[i].contains("healthCheck") && !sectionEvents[i].contains('!')){
+						SONG.healthCheck = true;
+					}
+					if(sectionEvents[i].contains("!healthCheck") && sectionEvents[i].contains('!')){
+						SONG.healthCheck = false;
+					}
+					if(sectionEvents[i].contains("hideArrows")){
+						hidden = true;
+					}
+					if(sectionEvents[i].contains("showArrows")){
+						hidden = false;
+					}
+					if(sectionEvents[i].contains("anim.bf.")){
+						trace(sectionEvents[i].substring(sectionEvents[i].indexOf('.') + 4));
+						boyfriend.playAnim(sectionEvents[i].substring(sectionEvents[i].indexOf('.') + 4), true);
+					}
+				}
+			}
+		}catch(e){
+			trace("There is no fucking beat Event");
+		}
 
 		curSection += 1;
 	}
@@ -2450,6 +2529,85 @@ class PlayState extends MusicBeatState
 		{
 			// dad.dance();
 		}
+		try{
+			var stepEvents = CoolUtil.coolTextFile(Paths.txt(curSong.toLowerCase() + '/stepEvent'));
+			for(i in 0...stepEvents.length){
+				if(stepEvents[i].contains(Std.string(curStep))){
+					/*if(stepEvents[i].contains("dad =")){
+						dad = null;
+						dad = new Character(100, 100, stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+						var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
+						switch (SONG.player2)
+						{
+							case 'gf':
+								dad.setPosition(gf.x, gf.y);
+								gf.visible = false;
+							if (isStoryMode)
+							{
+								camPos.x += 600;
+								tweenCamIn();
+							}
+
+							case "spooky":
+								dad.y += 200;
+							case "monster":
+								dad.y += 100;
+							case 'monster-christmas':
+								dad.y += 130;
+							case 'dad':
+								camPos.x += 400;
+							case 'pico':
+								camPos.x += 600;
+								dad.y += 300;
+							case 'parents-christmas':
+								dad.x -= 500;
+							case 'senpai':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'senpai-angry':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'spirit':
+								dad.x -= 150;
+								dad.y += 100;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+						}
+					} */
+					if(stepEvents[i].contains("health -=")){
+						health -= Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("health +=")){
+						health += Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("health =")){
+						health = Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("drain =")){
+						SONG.healthDrain = Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("healthCheck") && !stepEvents[i].contains('!')){
+						SONG.healthCheck = true;
+					}
+					if(stepEvents[i].contains("!healthCheck") && stepEvents[i].contains('!')){
+						SONG.healthCheck = false;
+					}
+					if(stepEvents[i].contains("hideArrows")){
+						hidden = true;
+					}
+					if(stepEvents[i].contains("showArrows")){
+						hidden = false;
+					}
+					if(stepEvents[i].contains("anim.bf.")){
+						trace(stepEvents[i].substring(stepEvents[i].indexOf('.') + 4));
+						boyfriend.playAnim(stepEvents[i].substring(stepEvents[i].indexOf('.') + 4), true);
+					}
+				}
+			}
+		}catch(e){
+			trace("There is no fucking step Event");
+		}
 	}
 
 	var lightningStrikeBeat:Int = 0;
@@ -2525,10 +2683,13 @@ class PlayState extends MusicBeatState
 						}
 					} */
 					if(beatEvents[i].contains("health -=")){
-						health -= Std.parseInt(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+						health -= Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
 					}
 					if(beatEvents[i].contains("health +=")){
-						health += Std.parseInt(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+						health += Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+					}
+					if(beatEvents[i].contains("health =")){
+						health = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
 					}
 					if(beatEvents[i].contains("drain =")){
 						SONG.healthDrain = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
@@ -2544,6 +2705,10 @@ class PlayState extends MusicBeatState
 					}
 					if(beatEvents[i].contains("showArrows")){
 						hidden = false;
+					}
+					if(beatEvents[i].contains("anim.bf.")){
+						trace(beatEvents[i].substring(beatEvents[i].indexOf('.') + 4));
+						boyfriend.playAnim(beatEvents[i].substring(beatEvents[i].indexOf('.') + 4), true);
 					}
 				}
 			}
