@@ -176,7 +176,8 @@ class ChartingState extends MusicBeatState
 
 		super.create();
 	}
-	
+	var check_arrowsHidden:FlxUICheckBox;
+
 	function addExtraUI():Void
 	{
 		var tab_group_note = new FlxUI(null, UI_box);
@@ -195,16 +196,24 @@ class ChartingState extends MusicBeatState
 		check_healthCheck.checked = _song.healthCheck;
 
 
-		var applyButton:FlxButton = new FlxButton(20, 90, "Apply", function()
+		var applyButton:FlxButton = new FlxButton(20, 80, "Apply", function()
 		{
 			_song.healthDrain = drain.value;
 			_song.healthCheck = check_healthCheck.checked;
 		});
 
+		var arrowHideText:FlxUIText = new FlxUIText(150, 10, 500, "Arrow hide", 8, true);
+		arrowHideText.name = 'health_drain_text';
+
+		check_arrowsHidden = new FlxUICheckBox(150, 30, null, null, "Arrows Hidden", 100);
+		check_arrowsHidden.name = 'check_arrowsHidden';
+		check_arrowsHidden.checked = _song.notes[curSection].arrowsHidden;
+
 		tab_group_note.add(drainTxt);
 		tab_group_note.add(drain);
 		tab_group_note.add(applyButton);
 		tab_group_note.add(check_healthCheck);
+		tab_group_note.add(check_arrowsHidden);
 
 		UI_box.addGroup(tab_group_note);
 	}
@@ -441,6 +450,8 @@ class ChartingState extends MusicBeatState
 					FlxG.log.add('changed bpm shit');
 				case "Alt Animation":
 					_song.notes[curSection].altAnim = check.checked;
+				case "Arrows Hidden":
+					_song.notes[curSection].arrowsHidden = check.checked;
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
@@ -701,7 +712,9 @@ class ChartingState extends MusicBeatState
 			+ " / "
 			+ Std.string(FlxMath.roundDecimal(FlxG.sound.music.length / 1000, 2))
 			+ "\nSection: "
-			+ curSection;
+			+ curSection
+			+ "\nBeat: "
+			+ curBeat;
 		super.update(elapsed);
 	}
 
@@ -815,6 +828,7 @@ class ChartingState extends MusicBeatState
 		var sec = _song.notes[curSection];
 
 		stepperLength.value = sec.lengthInSteps;
+		check_arrowsHidden.checked = sec.arrowsHidden;
 		check_mustHitSection.checked = sec.mustHitSection;
 		check_altAnim.checked = sec.altAnim;
 		check_changeBPM.checked = sec.changeBPM;
@@ -918,7 +932,8 @@ class ChartingState extends MusicBeatState
 			mustHitSection: true,
 			sectionNotes: [],
 			typeOfSection: 0,
-			altAnim: false
+			altAnim: false,
+			arrowsHidden: false
 		};
 
 		_song.notes.push(sec);

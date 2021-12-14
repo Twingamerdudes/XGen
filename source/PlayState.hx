@@ -52,6 +52,7 @@ class PlayState extends MusicBeatState
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
+	var hidden:Bool = false;
 
 	var halloweenLevel:Bool = false;
 
@@ -1245,7 +1246,9 @@ class PlayState extends MusicBeatState
 			{
 				babyArrow.y -= 10;
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				if(!PlayState.SONG.notes[Std.int(curStep / 16)].arrowsHidden){
+					FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				}
 			}
 
 			babyArrow.ID = i;
@@ -1260,6 +1263,13 @@ class PlayState extends MusicBeatState
 			babyArrow.x += ((FlxG.width / 2) * player);
 
 			strumLineNotes.add(babyArrow);
+			new FlxTimer().start(2, function(tmr:FlxTimer){
+				if(hidden == true || PlayState.SONG.notes[Std.int(curStep / 16)].arrowsHidden){
+					babyArrow.alpha = 0;
+				}else{
+					babyArrow.alpha = 100;
+				}
+			}, 0);
 		}
 	}
 
@@ -2467,6 +2477,78 @@ class PlayState extends MusicBeatState
 			// Dad doesnt interupt his own notes
 			if (SONG.notes[Math.floor(curStep / 16)].mustHitSection)
 				dad.dance();
+		}
+		try{
+			var beatEvents = CoolUtil.coolTextFile(Paths.txt(curSong.toLowerCase() + '/beatEvent'));
+			for(i in 0...beatEvents.length){
+				if(beatEvents[i].contains(Std.string(curBeat))){
+					/*if(beatEvents[i].contains("dad =")){
+						dad = null;
+						dad = new Character(100, 100, beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+						var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
+						switch (SONG.player2)
+						{
+							case 'gf':
+								dad.setPosition(gf.x, gf.y);
+								gf.visible = false;
+							if (isStoryMode)
+							{
+								camPos.x += 600;
+								tweenCamIn();
+							}
+
+							case "spooky":
+								dad.y += 200;
+							case "monster":
+								dad.y += 100;
+							case 'monster-christmas':
+								dad.y += 130;
+							case 'dad':
+								camPos.x += 400;
+							case 'pico':
+								camPos.x += 600;
+								dad.y += 300;
+							case 'parents-christmas':
+								dad.x -= 500;
+							case 'senpai':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'senpai-angry':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'spirit':
+								dad.x -= 150;
+								dad.y += 100;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+						}
+					} */
+					if(beatEvents[i].contains("health -=")){
+						health -= Std.parseInt(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+					}
+					if(beatEvents[i].contains("health +=")){
+						health += Std.parseInt(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+					}
+					if(beatEvents[i].contains("drain =")){
+						SONG.healthDrain = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
+					}
+					if(beatEvents[i].contains("healthCheck") && !beatEvents[i].contains('!')){
+						SONG.healthCheck = true;
+					}
+					if(beatEvents[i].contains("!healthCheck") && beatEvents[i].contains('!')){
+						SONG.healthCheck = false;
+					}
+					if(beatEvents[i].contains("hideArrows")){
+						hidden = true;
+					}
+					if(beatEvents[i].contains("showArrows")){
+						hidden = false;
+					}
+				}
+			}
+		}catch(e){
+			trace("There is no fucking beat Event");
 		}
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);

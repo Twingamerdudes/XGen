@@ -495,24 +495,6 @@ class Character extends FlxSprite
 				addOffset("singDOWN-alt", -30, -27);
 
 				playAnim('idle');
-
-			default:
-				frames = Paths.getSparrowAtlas('characters/$curCharacter');
-				animation.addByPrefix('idle', 'idle', 24, false);
-				animation.addByPrefix('singUP', 'up', 24, false);
-				animation.addByPrefix('singDOWN', 'down', 24, false);
-				animation.addByPrefix('singLEFT', 'left', 24, false);
-				animation.addByPrefix('singRIGHT', 'right', 24, false);
-
-				addOffset('idle');
-				addOffset("singUP", -47, 24);
-				addOffset("singRIGHT", -1, -23);
-				addOffset("singLEFT", -30, 16);
-				addOffset("singDOWN", -31, -29);
-
-				playAnim('idle');
-
-			dance();
 		}
 
 		dance();
@@ -666,28 +648,6 @@ class Character extends FlxSprite
 			}
 		}
 	}
-
-	/*public function readChar(){
-		var imageList:Array<String> = CoolUtil.coolTextFile(Paths.txt('imagelist'));
-		for(i in 0...imageList){
-			frames = Paths.getSparrowAtlas('characters/' + imageList[i]);
-			animation.addByPrefix('idle', 'still', 24, false);
-			animation.addByPrefix('singUP', 'up', 24, false);
-			animation.addByPrefix('singDOWN', 'down', 24, false);
-			animation.addByPrefix('singLEFT', 'left', 24, false);
-			animation.addByPrefix('singRIGHT', 'right', 24, false);
-
-			addOffset('idle');
-			addOffset("singUP", -47, 24);
-			addOffset("singRIGHT", -1, -23);
-			addOffset("singLEFT", -30, 16);
-			addOffset("singDOWN", -31, -29);
-
-			playAnim('idle');
-
-			dance();
-		}
-	} */
 
 	public function addOffset(name:String, x:Float = 0, y:Float = 0)
 	{
