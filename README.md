@@ -42,6 +42,9 @@ So, just open up powershell in your projects main dir and type in `lime test ` (
 - Health drain
 - Beat and Section events
 
+## Coumminty
+[Discord](https://discord.gg/pFWDFK33Tv), come here to chat with other people and if you need any help go to #help
+
 ## Credits
 1. ninjamuffin99 - for FNF itself
 2. KadeDev - for update alert code
