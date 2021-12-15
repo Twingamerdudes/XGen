@@ -2529,85 +2529,6 @@ class PlayState extends MusicBeatState
 		{
 			// dad.dance();
 		}
-		try{
-			var stepEvents = CoolUtil.coolTextFile(Paths.txt(curSong.toLowerCase() + '/stepEvent'));
-			for(i in 0...stepEvents.length){
-				if(stepEvents[i].contains(Std.string(curStep))){
-					/*if(stepEvents[i].contains("dad =")){
-						dad = null;
-						dad = new Character(100, 100, stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
-						var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
-						switch (SONG.player2)
-						{
-							case 'gf':
-								dad.setPosition(gf.x, gf.y);
-								gf.visible = false;
-							if (isStoryMode)
-							{
-								camPos.x += 600;
-								tweenCamIn();
-							}
-
-							case "spooky":
-								dad.y += 200;
-							case "monster":
-								dad.y += 100;
-							case 'monster-christmas':
-								dad.y += 130;
-							case 'dad':
-								camPos.x += 400;
-							case 'pico':
-								camPos.x += 600;
-								dad.y += 300;
-							case 'parents-christmas':
-								dad.x -= 500;
-							case 'senpai':
-								dad.x += 150;
-								dad.y += 360;
-								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-							case 'senpai-angry':
-								dad.x += 150;
-								dad.y += 360;
-								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-							case 'spirit':
-								dad.x -= 150;
-								dad.y += 100;
-								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
-						}
-					} */
-					if(stepEvents[i].contains("health -=")){
-						health -= Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
-					}
-					if(stepEvents[i].contains("health +=")){
-						health += Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
-					}
-					if(stepEvents[i].contains("health =")){
-						health = Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
-					}
-					if(stepEvents[i].contains("drain =")){
-						SONG.healthDrain = Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
-					}
-					if(stepEvents[i].contains("healthCheck") && !stepEvents[i].contains('!')){
-						SONG.healthCheck = true;
-					}
-					if(stepEvents[i].contains("!healthCheck") && stepEvents[i].contains('!')){
-						SONG.healthCheck = false;
-					}
-					if(stepEvents[i].contains("hideArrows")){
-						hidden = true;
-					}
-					if(stepEvents[i].contains("showArrows")){
-						hidden = false;
-					}
-					if(stepEvents[i].contains("anim.bf.")){
-						trace(stepEvents[i].substring(stepEvents[i].indexOf('.') + 4));
-						boyfriend.playAnim(stepEvents[i].substring(stepEvents[i].indexOf('.') + 4), true);
-					}
-				}
-			}
-		}catch(e){
-			trace("There is no fucking step Event");
-		}
 	}
 
 	var lightningStrikeBeat:Int = 0;
@@ -2715,6 +2636,85 @@ class PlayState extends MusicBeatState
 		}catch(e){
 			trace("There is no fucking beat Event");
 		}
+		/*try{
+			var stepEvents = CoolUtil.coolTextFile(Paths.txt(curSong.toLowerCase() + '/stepEvent'));
+			for(i in 0...stepEvents.length){
+				if(stepEvents[i].contains(Std.string(curStep))){
+					if(stepEvents[i].contains("dad =")){
+						dad = null;
+						dad = new Character(100, 100, stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+						var camPos:FlxPoint = new FlxPoint(dad.getGraphicMidpoint().x, dad.getGraphicMidpoint().y);
+						switch (SONG.player2)
+						{
+							case 'gf':
+								dad.setPosition(gf.x, gf.y);
+								gf.visible = false;
+							if (isStoryMode)
+							{
+								camPos.x += 600;
+								tweenCamIn();
+							}
+
+							case "spooky":
+								dad.y += 200;
+							case "monster":
+								dad.y += 100;
+							case 'monster-christmas':
+								dad.y += 130;
+							case 'dad':
+								camPos.x += 400;
+							case 'pico':
+								camPos.x += 600;
+								dad.y += 300;
+							case 'parents-christmas':
+								dad.x -= 500;
+							case 'senpai':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'senpai-angry':
+								dad.x += 150;
+								dad.y += 360;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+							case 'spirit':
+								dad.x -= 150;
+								dad.y += 100;
+								camPos.set(dad.getGraphicMidpoint().x + 300, dad.getGraphicMidpoint().y);
+						}
+					} 
+					if(stepEvents[i].contains("health -=")){
+						health -= Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("health +=")){
+						health += Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("health =")){
+						health = Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("drain =")){
+						SONG.healthDrain = Std.parseFloat(stepEvents[i].substring(stepEvents[i].indexOf('=') + 2));
+					}
+					if(stepEvents[i].contains("healthCheck") && !stepEvents[i].contains('!')){
+						SONG.healthCheck = true;
+					}
+					if(stepEvents[i].contains("!healthCheck") && stepEvents[i].contains('!')){
+						SONG.healthCheck = false;
+					}
+					if(stepEvents[i].contains("hideArrows")){
+						hidden = true;
+					}
+					if(stepEvents[i].contains("showArrows")){
+						hidden = false;
+					}
+					if(stepEvents[i].contains("anim.bf.")){
+						trace(stepEvents[i].substring(stepEvents[i].indexOf('.') + 4));
+						boyfriend.playAnim(stepEvents[i].substring(stepEvents[i].indexOf('.') + 4), true);
+					}
+				}
+			}
+		}catch(e){
+			trace("There is no fucking step Event");
+		} */
 		// FlxG.log.add('change bpm' + SONG.notes[Std.int(curStep / 16)].changeBPM);
 		wiggleShit.update(Conductor.crochet);
 

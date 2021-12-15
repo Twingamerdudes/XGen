@@ -495,6 +495,21 @@ class Character extends FlxSprite
 				addOffset("singDOWN-alt", -30, -27);
 
 				playAnim('idle');
+			default:
+				frames = Paths.getPackerAtlas('taeyai');
+				animation.addByPrefix('idle', "idle", 24, false);
+				animation.addByPrefix('singUP', "up", 24, false);
+				animation.addByPrefix('singRIGHT', "right", 24, false);
+				animation.addByPrefix('singLEFT', "left", 24, false);
+				animation.addByPrefix('singDOWN', "spirit down", 24, false);
+
+				addOffset('idle', -220, -280);
+				addOffset('singUP', -220, -240);
+				addOffset("singRIGHT", -220, -280);
+				addOffset("singLEFT", -200, -280);
+				addOffset("singDOWN", 170, 110);
+
+				playAnim('idle');
 		}
 
 		dance();

@@ -7,7 +7,6 @@ import flixel.addons.ui.FlxUIState;
 import flixel.math.FlxRect;
 import flixel.util.FlxTimer;
 import flixel.FlxBasic;
-
 class MusicBeatState extends FlxUIState
 {
 	private var lastBeat:Float = 0;
@@ -15,9 +14,9 @@ class MusicBeatState extends FlxUIState
 
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
-	public var controls(get, never):Controls;
-	public var controlsPublic:Controls;
 	private var assets:Array<FlxBasic> = [];
+	public var controls(get, never):Controls;
+
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
@@ -28,14 +27,7 @@ class MusicBeatState extends FlxUIState
 
 		super.create();
 	}
-	public function fancyOpenURL(schmancy:String)
-	{
-			#if linux
-			Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
-			#else
-			FlxG.openURL(schmancy);
-			#end
-	}
+
 	override function update(elapsed:Float)
 	{
 		//everyStep();
@@ -53,6 +45,15 @@ class MusicBeatState extends FlxUIState
 	private function updateBeat():Void
 	{
 		curBeat = Math.floor(curStep / 4);
+	}
+	
+	public function fancyOpenURL(schmancy:String)
+	{
+			#if linux
+			Sys.command('/usr/bin/xdg-open', [schmancy, "&"]);
+			#else
+			FlxG.openURL(schmancy);
+			#end
 	}
 
 	private function updateCurStep():Void
