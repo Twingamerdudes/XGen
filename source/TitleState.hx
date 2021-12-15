@@ -24,7 +24,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
-import io.newgrounds.NG;
+//import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
 
@@ -60,10 +60,10 @@ class TitleState extends MusicBeatState
 
 		//NGio.noLogin(APIStuff.API);
 
-		#if ng
+		/*#if ng
 		var ng:NGio = new NGio(APIStuff.API, APIStuff.EncKey);
 		trace('NEWGROUNDS LOL');
-		#end
+		#end */
 
 		FlxG.save.bind('funkin', 'ninjamuffin99');
 
