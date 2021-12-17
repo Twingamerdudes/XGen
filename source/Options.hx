@@ -15,11 +15,11 @@ class Options extends FlxSubState
 	var selector:FlxSprite;
 	var curSelected:Int = 0;
 
-	var grpOptionsTexts:FlxTypedGroup<FlxText>;
+	var grpOptionsTexts:FlxTypedGroup<Alphabet>;
 
 
-	var botplayOptionsEnabledTxt:FlxText;
-	var ghostTappingEnabledTxt:FlxText;
+	var botplayOptionsEnabledTxt:Alphabet;
+	var ghostTappingEnabledTxt:Alphabet;
 
 
 	var botplayOnOrOff:String = "On";
@@ -33,7 +33,7 @@ class Options extends FlxSubState
 	{
 		super();
 		
-		grpOptionsTexts = new FlxTypedGroup<FlxText>();
+		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
 		add(grpOptionsTexts);
 
 
@@ -42,19 +42,19 @@ class Options extends FlxSubState
 
 		for (i in 0...textMenuItems.length)
 		{
-			var optionText:FlxText = new FlxText(20, 20 + (i * 50), 0, textMenuItems[i], 32);
+			var optionText:Alphabet = new Alphabet(20, 20 + (i * 100), textMenuItems[i], true, false);
 			optionText.ID = i;
 			grpOptionsTexts.add(optionText);
 		}
-		botplayOptionsEnabledTxt = new FlxText(350, 70, 0, "", 32);
+		/*botplayOptionsEnabledTxt = new Alphabet(400, 70, "", false, false);
 		botplayOptionsEnabledTxt.scrollFactor.set();
 		add(botplayOptionsEnabledTxt);
 
-		ghostTappingEnabledTxt = new FlxText(350, 20, 0, "", 32);
+		ghostTappingEnabledTxt = new Alphabet(400, 20, "", false, false);
 		ghostTappingEnabledTxt.scrollFactor.set();
-		add(ghostTappingEnabledTxt);
+		add(ghostTappingEnabledTxt); */
 
-		if(botplayOnOrOffCurrent == "botplay"){
+		/*if(botplayOnOrOffCurrent == "botplay"){
 			botplayOnOrOff = "On";
 		}else{
 			botplayOnOrOff = "Off";
@@ -65,7 +65,7 @@ class Options extends FlxSubState
 			ghostTappingOnOrOff = "Off";
 		} 
 		botplayOptionsEnabledTxt.text = botplayOnOrOff;
-		ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
+		ghostTappingEnabledTxt.text = ghostTappingOnOrOff; */
 	}
 	override function update(elapsed:Float)
 		{
@@ -86,18 +86,27 @@ class Options extends FlxSubState
 			if (curSelected >= textMenuItems.length)
 				curSelected = 0;
 	
-			grpOptionsTexts.forEach(function(txt:FlxText)
+			grpOptionsTexts.forEach(function(txt:Alphabet)
 			{
 				txt.color = FlxColor.WHITE;
-	
+				var optionsFileBot:String = Assets.getText(Paths.txt('options/botplay'));
+				var optionsFileGhost:String = Assets.getText(Paths.txt('options/ghost'));
 				if (txt.ID == curSelected)
 					txt.color = FlxColor.YELLOW;
+				else if(txt.ID == 0 && optionsFileGhost == "ghost")
+					txt.color = FlxColor.GREEN;
+				else if(txt.ID == 1 && optionsFileBot == "botplay")
+					txt.color = FlxColor.GREEN;
+				else {
+					txt.color = FlxColor.WHITE;
+				}
 			});	
 			if (MUSICBEATSTATE.controls.ACCEPT)
 			{
 				switch (textMenuItems[curSelected])
 				{
 					case "Botplay":
+						FlxG.sound.play(Paths.sound('confirmMenu'));
 						var optionsFile:String = Assets.getText(Paths.txt('options/botplay'));
 						trace(optionsFile);
 						if(optionsFile != "botplay"){
@@ -114,8 +123,9 @@ class Options extends FlxSubState
 						}else{
 							botplayOnOrOff = "Off";
 						} 
-						botplayOptionsEnabledTxt.text = botplayOnOrOff;
+						//botplayOptionsEnabledTxt.text = botplayOnOrOff;
 					case "Ghost Tapping":
+						FlxG.sound.play(Paths.sound('confirmMenu'));
 						var optionsFile:String = Assets.getText(Paths.txt('options/ghost'));
 						trace(optionsFile);
 						if(optionsFile != "ghost"){
@@ -132,8 +142,9 @@ class Options extends FlxSubState
 						}else{
 							ghostTappingOnOrOff= "Off";
 						} 
-						ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
+						//ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
 					case "Back":
+						FlxG.sound.play(Paths.sound('confirmMenu'));
 						FlxG.state.openSubState(new OptionsSubState());
 				}
 			}
