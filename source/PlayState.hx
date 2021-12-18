@@ -2630,10 +2630,10 @@ class PlayState extends MusicBeatState
 					if(beatEvents[i].contains("showArrows")){
 						hidden = false;
 					}
-					if(beatEvents[i].contains("anim.bf.")){
+					/*if(beatEvents[i].contains("anim.bf.")){
 						trace(beatEvents[i].substring(beatEvents[i].indexOf('.') + 4));
 						boyfriend.playAnim(beatEvents[i].substring(beatEvents[i].indexOf('.') + 4), true);
-					}
+					} */
 				}
 			}
 		}catch(e){
