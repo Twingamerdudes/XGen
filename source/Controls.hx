@@ -380,6 +380,7 @@ class Controls extends FlxActionSet
 		}
 	}
 
+
 	public function copyFrom(controls:Controls, ?device:Device)
 	{
 		#if (haxe >= "4.0.0")
@@ -494,24 +495,29 @@ class Controls extends FlxActionSet
 			removeKeyboard();
 
 		keyboardScheme = scheme;
+
+		var upArrow:String = CoolUtil.coolTextFileString(Paths.txt('options/keybinds/up'));
+		var leftArrow:String = CoolUtil.coolTextFileString(Paths.txt('options/keybinds/left'));
+		var rightArrow:String = CoolUtil.coolTextFileString(Paths.txt('options/keybinds/right'));
+		var downArrow:String = CoolUtil.coolTextFileString(Paths.txt('options/keybinds/down'));
 		
 		#if (haxe >= "4.0.0")
 		switch (scheme)
 		{
 			case Solo:
-				inline bindKeys(Control.UP, [W, FlxKey.UP]);
-				inline bindKeys(Control.DOWN, [S, FlxKey.DOWN]);
-				inline bindKeys(Control.LEFT, [A, FlxKey.LEFT]);
-				inline bindKeys(Control.RIGHT, [D, FlxKey.RIGHT]);
+				inline bindKeys(Control.UP, [upArrow, FlxKey.UP]);
+				inline bindKeys(Control.DOWN, [downArrow, FlxKey.DOWN]);
+				inline bindKeys(Control.LEFT, [leftArrow, FlxKey.LEFT]);
+				inline bindKeys(Control.RIGHT, [rightArrow, FlxKey.RIGHT]);
 				inline bindKeys(Control.ACCEPT, [Z, SPACE, ENTER]);
 				inline bindKeys(Control.BACK, [BACKSPACE, ESCAPE]);
 				inline bindKeys(Control.PAUSE, [P, ENTER, ESCAPE]);
 				inline bindKeys(Control.RESET, [R]);
 			case Duo(true):
-				inline bindKeys(Control.UP, [W]);
-				inline bindKeys(Control.DOWN, [S]);
-				inline bindKeys(Control.LEFT, [A]);
-				inline bindKeys(Control.RIGHT, [/*rightKey */ D]);
+				inline bindKeys(Control.UP, [upArrow]);
+				inline bindKeys(Control.DOWN, [downArrow]);
+				inline bindKeys(Control.LEFT, [leftArrow]);
+				inline bindKeys(Control.RIGHT, [rightArrow]);
 				inline bindKeys(Control.ACCEPT, [G, Z]);
 				inline bindKeys(Control.BACK, [H, X]);
 				inline bindKeys(Control.PAUSE, [ONE]);

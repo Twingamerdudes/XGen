@@ -34,8 +34,17 @@ class OptionsSubState extends MusicBeatSubstate
 		{
 			var optionText:Alphabet = new Alphabet(20, 20 + (i * 100), textMenuItems[i], true, false);
 			optionText.ID = i;
+
+			optionText.isMenuItem = true;
+			optionText.targetY = i;
+
 			grpOptionsTexts.add(optionText);
 		}
+		grpOptionsTexts.forEach(function(txt:Alphabet)
+		{				
+			if (txt.ID != 0)
+				txt.alpha = 0.6;
+		});
 	}
 
 
@@ -44,10 +53,12 @@ class OptionsSubState extends MusicBeatSubstate
 		super.update(elapsed);
 
 		if (controls.UP_P)
-			curSelected -= 1;
+			changeSelection(-1);
+			//curSelected -= 1;
 
 		if (controls.DOWN_P)
-			curSelected += 1;
+			changeSelection(1);
+			//curSelected += 1;
 
 		if (controls.BACK)
 			FlxG.switchState(new MainMenuState());
@@ -78,10 +89,41 @@ class OptionsSubState extends MusicBeatSubstate
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxG.state.closeSubState();
 					FlxG.state.openSubState(new Options());
+				/*case "Gameplay":
+					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.state.closeSubState();
+					FlxG.state.openSubState(new GameplaySubState());
+				*/
 				case "Back":
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxG.switchState(new MainMenuState());
 			}
 		}
+	}
+	function changeSelection(change:Int = 0)
+	{
+		if (change != 0)
+			FlxG.sound.play(Paths.sound('scrollMenu', 'preload'), 0.4);
+
+		curSelected += change;
+
+		if (curSelected < 0)
+			curSelected = textMenuItems.length - 1;
+		else if (curSelected >= textMenuItems.length)
+			curSelected = 0;
+
+		var stuff:Int = 0;
+
+		for (item in grpOptionsTexts.members)
+		{
+			item.targetY = stuff - curSelected;
+			stuff ++;
+
+			item.alpha = 0.6;
+
+			if (item.targetY == 0)
+				item.alpha = 1;
+		}
+
 	}
 }

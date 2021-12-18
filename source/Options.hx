@@ -44,6 +44,10 @@ class Options extends FlxSubState
 		{
 			var optionText:Alphabet = new Alphabet(20, 20 + (i * 100), textMenuItems[i], true, false);
 			optionText.ID = i;
+
+			optionText.isMenuItem = true;
+			optionText.targetY = i;
+			
 			grpOptionsTexts.add(optionText);
 		}
 		/*botplayOptionsEnabledTxt = new Alphabet(400, 70, "", false, false);
@@ -72,10 +76,12 @@ class Options extends FlxSubState
 			super.update(elapsed);
 	
 			if (MUSICBEATSTATE.controls.UP_P)
-				curSelected -= 1;
+				changeSelection(-1);
+				//curSelected -= 1;
 	
 			if (MUSICBEATSTATE.controls.DOWN_P)
-				curSelected += 1;
+				changeSelection(1);
+				//curSelected += 1;
 
 			if(MUSICBEATSTATE.controls.BACK){
 				FlxG.state.openSubState(new OptionsSubState());
@@ -149,4 +155,28 @@ class Options extends FlxSubState
 				}
 			}
 		}
+	function changeSelection(change:Int = 0)
+	{
+		if (change != 0)
+			FlxG.sound.play(Paths.sound('scrollMenu', 'preload'), 0.4);
+
+		curSelected += change;
+
+		if (curSelected < 0)
+			curSelected = textMenuItems.length - 1;
+		else if (curSelected >= textMenuItems.length)
+			curSelected = 0;
+
+		var stuff:Int = 0;
+
+		for (item in grpOptionsTexts.members)
+		{
+			item.targetY = stuff - curSelected;
+			stuff ++;
+
+			if (item.targetY == 0)
+				item.alpha = 1;
+		}
+
+	}
 }
