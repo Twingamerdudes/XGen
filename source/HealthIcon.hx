@@ -26,6 +26,7 @@ class HealthIcon extends FlxSprite
 		//animation.add('tankman', [8, 9], 0, false, isPlayer);
 		animation.add('face', [10, 11], 0, false, isPlayer);
 		animation.add('dad', [12, 13], 0, false, isPlayer);
+		//animation.add('taeyai', [10, 11], 0, false, isPlayer);
 		animation.add('senpai', [22, 22], 0, false, isPlayer);
 		animation.add('senpai-angry', [22, 22], 0, false, isPlayer);
 		animation.add('spirit', [23, 23], 0, false, isPlayer);
@@ -34,6 +35,10 @@ class HealthIcon extends FlxSprite
 		animation.add('parents-christmas', [17], 0, false, isPlayer);
 		animation.add('monster', [19, 20], 0, false, isPlayer);
 		animation.add('monster-christmas', [19, 20], 0, false, isPlayer);
+		var customCharList:Array<String> = CoolUtil.coolTextFile(Paths.txt('customCharList'));
+		for(i in 0...customCharList.length){
+			animation.add(customCharList[i], [i + 24, i + 25], 0, false, isPlayer);
+		}
 		animation.play(char);
 		scrollFactor.set();
 	}

@@ -52,6 +52,7 @@ class TitleState extends MusicBeatState
 
 		PlayerSettings.init();
 
+
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
 		// DEBUG BULLSHIT
@@ -267,7 +268,9 @@ class TitleState extends MusicBeatState
 				pressedEnter = true;
 			#end
 		}
-
+		if(pressedEnter && skippedIntro){
+			titleText.animation.play('press');
+		}
 		if (pressedEnter && !transitioning && skippedIntro)
 		{
 			#if !switch
@@ -277,8 +280,6 @@ class TitleState extends MusicBeatState
 			if (Date.now().getDay() == 5)
 				//NGio.unlockMedal(61034);
 			#end
-
-			titleText.animation.play('press');
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);
 			FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);

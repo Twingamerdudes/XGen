@@ -32,6 +32,8 @@ import openfl.events.IOErrorEvent;
 import openfl.media.Sound;
 import openfl.net.FileReference;
 import openfl.utils.ByteArray;
+import flixel.input.keyboard.FlxKey;
+import flixel.input.keyboard.FlxKeyList;
 
 using StringTools;
 
@@ -355,6 +357,7 @@ class ChartingState extends MusicBeatState
 		check_changeBPM = new FlxUICheckBox(10, 60, null, null, 'Change BPM', 100);
 		check_changeBPM.name = 'check_changeBPM';
 
+
 		tab_group_section.add(stepperLength);
 		tab_group_section.add(stepperSectionBPM);
 		tab_group_section.add(stepperCopy);
@@ -370,6 +373,8 @@ class ChartingState extends MusicBeatState
 
 	var stepperSusLength:FlxUINumericStepper;
 
+	var check_isDeath:FlxUICheckBox;
+	var typeNote:String = null;
 	function addNoteUI():Void
 	{
 		var tab_group_note = new FlxUI(null, UI_box);
@@ -379,10 +384,36 @@ class ChartingState extends MusicBeatState
 		stepperSusLength.value = 0;
 		stepperSusLength.name = 'note_susLength';
 
-		var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
+		//var applyLength:FlxButton = new FlxButton(100, 10, 'Apply');
+
+		check_isDeath = new FlxUICheckBox(10, -100, null, null, "Death note", 100);
+		check_isDeath.checked = false;
+		check_isDeath.name = "check_deathNote";
+
+		var noteTypesLabel:FlxUIText = new FlxUIText(10, 30, 500, "Note types", 8, true);
+		noteTypesLabel.name = 'health_drain_text';
+
+		var noteTypes = CoolUtil.coolTextFile(Paths.txt('custom_notes/notesList'));
+		var noteTypeDropDown = new FlxUIDropDownMenu(10, 50, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, true), function(noteType:String)
+		{
+			if(noteTypes[Std.parseInt(noteType)] == "Death"){
+				check_isDeath.checked = true;
+				typeNote = noteTypes[Std.parseInt(noteType)];
+			}
+			else if(noteTypes[Std.parseInt(noteType)] == "Normal"){
+				typeNote = null;
+			}
+			else
+			{
+				typeNote = noteTypes[Std.parseInt(noteType)];
+			}
+		});
 
 		tab_group_note.add(stepperSusLength);
-		tab_group_note.add(applyLength);
+		tab_group_note.add(check_isDeath);
+		tab_group_note.add(noteTypesLabel);
+		tab_group_note.add(noteTypeDropDown);
+		//tab_group_note.add(applyLength);
 
 		UI_box.addGroup(tab_group_note);
 	}
@@ -453,6 +484,11 @@ class ChartingState extends MusicBeatState
 					_song.notes[curSection].altAnim = check.checked;
 				case "Arrows Hidden":
 					_song.notes[curSection].arrowsHidden = check.checked;
+				/*case "check_deathNote":
+					//curSelectedNote[3] = check.checked;
+					_song.notes[curSection].sectionNotes[Std.parseInt(curSelectedNote[0])].isDeath = check.checked;
+					trace(_song.notes[curSection].sectionNotes[Std.parseInt(curSelectedNote[0])].isDeath);
+				*/
 			}
 		}
 		else if (id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper))
@@ -994,14 +1030,52 @@ class ChartingState extends MusicBeatState
 		var noteStrum = getStrumTime(dummyArrow.y) + sectionStartTime();
 		var noteData = Math.floor(FlxG.mouse.x / GRID_SIZE);
 		var noteSus = 0;
+		//var deathNote = check_isDeath.checked;
 
-		_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus]);
+		if (FlxG.keys.pressed.ALT && !FlxG.keys.pressed.ONE)
+		{
+			_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, true]);
+		}
+		else if(typeNote == null){
+			_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, check_isDeath.checked]);
+		}else{
+			_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, check_isDeath.checked, typeNote]);
+		}
+		/*else{
+			var pressed = false;
+			try{
+				var notesList = CoolUtil.coolTextFile(Paths.txt('custom_notes/notesList'));
+				for(v in notesList){
+					var customNote:String = v;
+					var noteBinds:String = CoolUtil.coolTextFileString(Paths.txt('custom_notes/$customNote/$customNote-Bind'));
+					var bind:Array<FlxKey> = new Array<FlxKey>();
+					bind.insert(0,noteBinds);
+					if(FlxG.keys.anyJustPressed(bind)){
+						_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, check_isDeath.checked, customNote]);
+						pressed = true;
+						trace("added");
+						break;
+					}
+				}
+				if(pressed == false){
+					_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, check_isDeath.checked]);
+				}
+			}catch(e){
+				trace("Could not load note, dumbass");
+			}
+		} */
 
 		curSelectedNote = _song.notes[curSection].sectionNotes[_song.notes[curSection].sectionNotes.length - 1];
 
 		if (FlxG.keys.pressed.CONTROL)
 		{
-			_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus]);
+			if (FlxG.keys.pressed.ALT)
+			{
+				_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, true]);
+			}
+			else{
+				_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, check_isDeath.checked]);
+			}
 		}
 
 		trace(noteStrum);

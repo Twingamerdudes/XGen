@@ -17,12 +17,16 @@ class Character extends FlxSprite
 
 	public var holdTimer:Float = 0;
 
+	var loadedCharacter:Bool = false;
+	var char:String;
+
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
 		super(x, y);
 
 		animOffsets = new Map<String, Array<Dynamic>>();
 		curCharacter = character;
+		char = curCharacter;
 		this.isPlayer = isPlayer;
 
 		var tex:FlxAtlasFrames;
@@ -59,7 +63,7 @@ class Character extends FlxSprite
 				addOffset('hairFall', 0, -9);
 
 				addOffset('scared', -2, -17);
-
+				loadedCharacter = true;
 				playAnim('danceRight');
 
 			case 'gf-christmas':
@@ -90,7 +94,7 @@ class Character extends FlxSprite
 				addOffset('hairFall', 0, -9);
 
 				addOffset('scared', -2, -17);
-
+				loadedCharacter = true;
 				playAnim('danceRight');
 
 			case 'gf-car':
@@ -103,7 +107,7 @@ class Character extends FlxSprite
 
 				addOffset('danceLeft', 0);
 				addOffset('danceRight', 0);
-
+				loadedCharacter = true;
 				playAnim('danceRight');
 
 			case 'gf-pixel':
@@ -115,7 +119,7 @@ class Character extends FlxSprite
 
 				addOffset('danceLeft', 0);
 				addOffset('danceRight', 0);
-
+				loadedCharacter = true;
 				playAnim('danceRight');
 
 				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
@@ -137,7 +141,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", 0, 27);
 				addOffset("singLEFT", -10, 10);
 				addOffset("singDOWN", 0, -30);
-
+				loadedCharacter = true;
 				playAnim('idle');
 			case 'spooky':
 				tex = Paths.getSparrowAtlas('spooky_kids_assets');
@@ -156,7 +160,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -130, -14);
 				addOffset("singLEFT", 130, -10);
 				addOffset("singDOWN", -50, -130);
-
+				loadedCharacter = true;
 				playAnim('danceRight');
 			case 'mom':
 				tex = Paths.getSparrowAtlas('Mom_Assets');
@@ -175,7 +179,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", 10, -60);
 				addOffset("singLEFT", 250, -23);
 				addOffset("singDOWN", 20, -160);
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 			case 'mom-car':
@@ -195,7 +199,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", 10, -60);
 				addOffset("singLEFT", 250, -23);
 				addOffset("singDOWN", 20, -160);
-
+				loadedCharacter = true;
 				playAnim('idle');
 			case 'monster':
 				tex = Paths.getSparrowAtlas('Monster_Assets');
@@ -211,6 +215,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -51);
 				addOffset("singLEFT", -30);
 				addOffset("singDOWN", -30, -40);
+				loadedCharacter = true;
 				playAnim('idle');
 			case 'monster-christmas':
 				tex = Paths.getSparrowAtlas('christmas/monsterChristmas');
@@ -226,6 +231,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHT", -51);
 				addOffset("singLEFT", -30);
 				addOffset("singDOWN", -40, -94);
+				loadedCharacter = true;
 				playAnim('idle');
 			case 'pico':
 				tex = Paths.getSparrowAtlas('Pico_FNF_assetss');
@@ -261,7 +267,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHTmiss", -60, 41);
 				addOffset("singLEFTmiss", 62, 64);
 				addOffset("singDOWNmiss", 210, -28);
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 				flipX = true;
@@ -300,7 +306,7 @@ class Character extends FlxSprite
 				addOffset('deathLoop', 37, 5);
 				addOffset('deathConfirm', 37, 69);
 				addOffset('scared', -4);
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 				flipX = true;
@@ -329,7 +335,7 @@ class Character extends FlxSprite
 				addOffset("singLEFTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
 				addOffset("hey", 7, 4);
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 				flipX = true;
@@ -355,6 +361,7 @@ class Character extends FlxSprite
 				addOffset("singRIGHTmiss", -30, 21);
 				addOffset("singLEFTmiss", 12, 24);
 				addOffset("singDOWNmiss", -11, -19);
+				loadedCharacter = true;
 				playAnim('idle');
 
 				flipX = true;
@@ -382,7 +389,7 @@ class Character extends FlxSprite
 
 				setGraphicSize(Std.int(width * 6));
 				updateHitbox();
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 				width -= 100;
@@ -402,6 +409,7 @@ class Character extends FlxSprite
 				addOffset('firstDeath');
 				addOffset('deathLoop', -37);
 				addOffset('deathConfirm', -37);
+				loadedCharacter = true;
 				playAnim('firstDeath');
 				// pixel bullshit
 				setGraphicSize(Std.int(width * 6));
@@ -422,12 +430,11 @@ class Character extends FlxSprite
 				addOffset("singRIGHT");
 				addOffset("singLEFT", 40);
 				addOffset("singDOWN", 14);
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 				setGraphicSize(Std.int(width * 6));
 				updateHitbox();
-
 				antialiasing = false;
 			case 'senpai-angry':
 				frames = Paths.getSparrowAtlas('weeb/senpai');
@@ -442,11 +449,11 @@ class Character extends FlxSprite
 				addOffset("singRIGHT");
 				addOffset("singLEFT", 40);
 				addOffset("singDOWN", 14);
+				loadedCharacter = true;
 				playAnim('idle');
 
 				setGraphicSize(Std.int(width * 6));
 				updateHitbox();
-
 				antialiasing = false;
 
 			case 'spirit':
@@ -465,7 +472,7 @@ class Character extends FlxSprite
 
 				setGraphicSize(Std.int(width * 6));
 				updateHitbox();
-
+				loadedCharacter = true;
 				playAnim('idle');
 
 				antialiasing = false;
@@ -493,23 +500,43 @@ class Character extends FlxSprite
 				addOffset("singRIGHT-alt", -1, -24);
 				addOffset("singLEFT-alt", -30, 15);
 				addOffset("singDOWN-alt", -30, -27);
+				loadedCharacter = true;
+				playAnim('idle');
+			/*case 'taeyai':
+				frames = Paths.getSparrowAtlas('characters/taeyai');
+				animation.addByPrefix('idle', 'idle0', 24, false);
+				animation.addByPrefix('singUP', 'up0', 24, false);
+				animation.addByPrefix('singDOWN', 'down0', 24, false);
+				animation.addByPrefix('singLEFT', 'left0', 24, false);
+				animation.addByPrefix('singRIGHT', 'right', 24, false);
+
+
+				addOffset('idle');
+				addOffset("singUP", -47, 24);
+				addOffset("singRIGHT", -1, -23);
+				addOffset("singLEFT", -30, 16);
+				addOffset("singDOWN", -31, -29);
 
 				playAnim('idle');
-			default:
-				frames = Paths.getPackerAtlas('taeyai');
-				animation.addByPrefix('idle', "idle", 24, false);
-				animation.addByPrefix('singUP', "up", 24, false);
-				animation.addByPrefix('singRIGHT', "right", 24, false);
-				animation.addByPrefix('singLEFT', "left", 24, false);
-				animation.addByPrefix('singDOWN', "spirit down", 24, false);
+			*/
+				
+		}
+		if(loadedCharacter == false){
+			frames = Paths.getSparrowAtlas('characters/$curCharacter');
+			animation.addByPrefix('idle', 'idle0', 24, false);
+			animation.addByPrefix('singUP', 'up0', 24, false);
+			animation.addByPrefix('singDOWN', 'down0', 24, false);
+			animation.addByPrefix('singLEFT', 'left0', 24, false);
+			animation.addByPrefix('singRIGHT', 'right', 24, false);
 
-				addOffset('idle', -220, -280);
-				addOffset('singUP', -220, -240);
-				addOffset("singRIGHT", -220, -280);
-				addOffset("singLEFT", -200, -280);
-				addOffset("singDOWN", 170, 110);
 
-				playAnim('idle');
+			addOffset('idle');
+			addOffset("singUP", -47, 24);
+			addOffset("singRIGHT", -1, -23);
+			addOffset("singLEFT", -30, 16);
+			addOffset("singDOWN", -31, -29);
+
+			playAnim('idle');
 		}
 
 		dance();
