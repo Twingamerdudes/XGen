@@ -41,6 +41,8 @@ So, just open up powershell in your projects main dir and type in `lime test ` (
 - Botplay
 - Health drain
 - Beat and Section events
+- Custom notes
+- Softcoded a lot of stuff
 
 ## Coumminty
 [Discord](https://discord.gg/pFWDFK33Tv), come here to chat with other people and if you need any help go to #help
