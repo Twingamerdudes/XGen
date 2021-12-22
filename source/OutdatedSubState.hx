@@ -83,7 +83,7 @@ class OutdatedSubState extends MusicBeatState
 			+ "."
 			+ "Go and get the new version, trust me, it's more dope then your pp."
 			+ " Press enter to get directed to new version, "
-			+ "Or be a pussy and press escape to contiune playing on this outdate version.",
+			+ "Or be a pussy and press escape to contiune playing on this outdated version.",
 			32);
 		txt.setFormat("VCR OSD Mono", 32, FlxColor.fromRGB(200, 200, 200), CENTER);
 		txt.borderColor = FlxColor.BLACK;

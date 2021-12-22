@@ -1485,7 +1485,7 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		scoreTxt.text = "Score:" + songScore;
-		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.3";
+		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.4";
 		accurayTxt.text = "Accuracy: %" + songAccuracy;
 		comboBreaksTxt.text = "Combo breaks: " + songComboBreaks;
 
