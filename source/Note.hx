@@ -62,31 +62,84 @@ class Note extends FlxSprite
 		switch (daStage)
 		{
 			case 'school' | 'schoolEvil':
-				loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
+				if(isDeath == false && daType == null){
+					loadGraphic(Paths.image('weeb/pixelUI/arrows-pixels'), true, 17, 17);
 
-				animation.add('greenScroll', [6]);
-				animation.add('redScroll', [7]);
-				animation.add('blueScroll', [5]);
-				animation.add('purpleScroll', [4]);
+					animation.add('greenScroll', [6]);
+					animation.add('redScroll', [7]);
+					animation.add('blueScroll', [5]);
+					animation.add('purpleScroll', [4]);
 
-				if (isSustainNote)
-				{
-					loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
+					if (isSustainNote)
+					{
+						loadGraphic(Paths.image('weeb/pixelUI/arrowEnds'), true, 7, 6);
 
-					animation.add('purpleholdend', [4]);
-					animation.add('greenholdend', [6]);
-					animation.add('redholdend', [7]);
-					animation.add('blueholdend', [5]);
+						animation.add('purpleholdend', [4]);
+						animation.add('greenholdend', [6]);
+						animation.add('redholdend', [7]);
+						animation.add('blueholdend', [5]);
 
-					animation.add('purplehold', [0]);
-					animation.add('greenhold', [2]);
-					animation.add('redhold', [3]);
-					animation.add('bluehold', [1]);
+						animation.add('purplehold', [0]);
+						animation.add('greenhold', [2]);
+						animation.add('redhold', [3]);
+						animation.add('bluehold', [1]);
+					}
+
+					setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+					updateHitbox();
 				}
+				else if(isDeath == true || daType == "Death"){
+					loadGraphic(Paths.image('weeb/pixelUI/HURTNOTE_assets'), true, 17, 17);
 
-				setGraphicSize(Std.int(width * PlayState.daPixelZoom));
-				updateHitbox();
+					animation.add('greenScroll', [6]);
+					animation.add('redScroll', [7]);
+					animation.add('blueScroll', [5]);
+					animation.add('purpleScroll', [4]);
 
+					if (isSustainNote)
+					{
+						loadGraphic(Paths.image('weeb/pixelUI/HURTNOTE_assetsENDS'), true, 7, 6);
+
+						animation.add('purpleholdend', [4]);
+						animation.add('greenholdend', [6]);
+						animation.add('redholdend', [7]);
+						animation.add('blueholdend', [5]);
+
+						animation.add('purplehold', [0]);
+						animation.add('greenhold', [2]);
+						animation.add('redhold', [3]);
+						animation.add('bluehold', [1]);
+					}
+
+					setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+					updateHitbox();
+				}
+				else if(daType != null){
+					frames = Paths.getSparrowAtlas('weeb/pixelUI/' + daType + '_assets');
+
+					animation.add('greenScroll', [6]);
+					animation.add('redScroll', [7]);
+					animation.add('blueScroll', [5]);
+					animation.add('purpleScroll', [4]);
+
+					if (isSustainNote)
+					{
+						loadGraphic(Paths.image('weeb/pixelUI/' + daType + '_assetsENDS'), true, 7, 6);
+
+						animation.add('purpleholdend', [4]);
+						animation.add('greenholdend', [6]);
+						animation.add('redholdend', [7]);
+						animation.add('blueholdend', [5]);
+
+						animation.add('purplehold', [0]);
+						animation.add('greenhold', [2]);
+						animation.add('redhold', [3]);
+						animation.add('bluehold', [1]);
+					}
+
+					setGraphicSize(Std.int(width * PlayState.daPixelZoom));
+					updateHitbox();
+				}
 			default:
 				if(isDeath == false && daType == null){
 					frames = Paths.getSparrowAtlas('NOTE_assets');
