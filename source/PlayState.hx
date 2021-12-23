@@ -1210,7 +1210,7 @@ class PlayState extends MusicBeatState
 					{
 						sustainNote.x += FlxG.width / 2; // general offset
 					}
-					if(songNotes[3] == true){
+					if(songNotes[3] == true && curStage != 'school' && curStage != 'schoolEvil'){
 						sustainNote.x += 35;
 					}
 				}
