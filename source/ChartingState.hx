@@ -138,7 +138,6 @@ class ChartingState extends MusicBeatState
 
 		// sections = _song.notes;
 
-		updateGrid();
 
 		loadSong(_song.song);
 		Conductor.changeBPM(_song.bpm);
@@ -172,6 +171,8 @@ class ChartingState extends MusicBeatState
 		addSongUI();
 		addSectionUI();
 		addNoteUI();
+		
+		updateGrid();
 
 		add(curRenderedNotes);
 		add(curRenderedSustains);
@@ -514,6 +515,8 @@ class ChartingState extends MusicBeatState
 			else if (wname == 'note_susLength')
 			{
 				curSelectedNote[2] = nums.value;
+				curSelectedNote[3] = check_isDeath.checked;
+				curSelectedNote[4] = typeNote;
 				updateGrid();
 			}
 			else if (wname == 'section_bpm')
@@ -759,6 +762,8 @@ class ChartingState extends MusicBeatState
 	{
 		if (curSelectedNote != null)
 		{
+			curSelectedNote[3] = check_isDeath.checked;
+			curSelectedNote[4] = typeNote;
 			if (curSelectedNote[2] != null)
 			{
 				curSelectedNote[2] += value;
@@ -942,8 +947,12 @@ class ChartingState extends MusicBeatState
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
 			var daSus = i[2];
+			var isDeath = i[3];
+			var daType = i[4];
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4);
 			note.sustainLength = daSus;
+			//note.daType = daType;
+			//note.isDeath = isDeath;
 			note.setGraphicSize(GRID_SIZE, GRID_SIZE);
 			note.updateHitbox();
 			note.x = Math.floor(daNoteInfo * GRID_SIZE);
