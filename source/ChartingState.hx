@@ -1032,7 +1032,7 @@ class ChartingState extends MusicBeatState
 		var noteSus = 0;
 		//var deathNote = check_isDeath.checked;
 
-		if (FlxG.keys.pressed.ALT && !FlxG.keys.pressed.ONE)
+		if (FlxG.keys.pressed.ALT)
 		{
 			_song.notes[curSection].sectionNotes.push([noteStrum, noteData, noteSus, true]);
 		}
@@ -1073,8 +1073,10 @@ class ChartingState extends MusicBeatState
 			{
 				_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, true]);
 			}
-			else{
+			else if(typeNote == null){
 				_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, check_isDeath.checked]);
+			}else{
+				_song.notes[curSection].sectionNotes.push([noteStrum, (noteData + 4) % 8, noteSus, check_isDeath.checked, typeNote]);
 			}
 		}
 
