@@ -87,8 +87,16 @@ class ChartingState extends MusicBeatState
 	override function create()
 	{
 		curSection = lastSection;
-
-		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
+		if(PlayState.SONG != null){
+			switch(PlayState.SONG.maina){
+				case 4:
+					gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
+				case 5:
+					gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 10, GRID_SIZE * 16);
+			}
+		}else{
+			gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
+		}
 		add(gridBG);
 
 		leftIcon = new HealthIcon('bf');
@@ -125,7 +133,8 @@ class ChartingState extends MusicBeatState
 				speed: 1,
 				validScore: false,
 				healthDrain: 0,
-				healthCheck: true
+				healthCheck: true,
+				maina: 4
 			};
 		}
 
@@ -163,8 +172,13 @@ class ChartingState extends MusicBeatState
 		UI_box = new FlxUITabMenu(null, tabs, true);
 
 		UI_box.resize(300, 400);
-		UI_box.x = FlxG.width / 2;
-		UI_box.y = 20;
+		if(_song.maina == 4){
+			UI_box.x = FlxG.width / 2;
+			UI_box.y = 20;
+		}else if(_song.maina == 5){
+			UI_box.x = FlxG.width / 2 + 90;
+			UI_box.y = 20;
+		}
 		add(UI_box);
 
 		addExtraUI();
@@ -221,6 +235,8 @@ class ChartingState extends MusicBeatState
 
 		UI_box.addGroup(tab_group_note);
 	}
+	var mainaNumber:FlxUINumericStepper;
+
 	function addSongUI():Void
 	{
 		var UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
@@ -285,6 +301,14 @@ class ChartingState extends MusicBeatState
 			_song.player2 = characters[Std.parseInt(character)];
 		});
 
+		mainaNumber = new FlxUINumericStepper(140, 160, 1 , 1, 4, 5, 0);
+		mainaNumber.value = _song.maina;
+		mainaNumber.name = 'mainaStepper';
+
+		var mainaTxt:FlxUIText = new FlxUIText(140, 140, 200, "Maina [BETA]");
+
+		var mainaWaringTxt:FlxUIText = new FlxUIText(140, 180, 150, "WARING: changing this value WILL reset the chart editor and will erase what you have charting so far.");
+
 		player2DropDown.selectedLabel = _song.player2;
 
 		var tab_group_song = new FlxUI(null, UI_box);
@@ -292,6 +316,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(UI_songTitle);
 
 		tab_group_song.add(check_voices);
+		tab_group_song.add(mainaNumber);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
@@ -301,6 +326,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
+		tab_group_song.add(mainaWaringTxt);
+		tab_group_song.add(mainaTxt);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();
@@ -524,6 +551,13 @@ class ChartingState extends MusicBeatState
 				_song.notes[curSection].bpm = Std.int(nums.value);
 				updateGrid();
 			}
+			else if(wname == 'mainaStepper'){
+				_song.maina = Std.int(nums.value);
+				for(i in 0..._song.notes.length){
+					_song.notes[i].sectionNotes = [];
+				}
+				FlxG.switchState(new ChartingState());
+			}
 		}
 
 		// FlxG.log.add(id + " WEED " + sender + " WEED " + data + " WEED " + params);
@@ -655,7 +689,7 @@ class ChartingState extends MusicBeatState
 			else
 			{
 				UI_box.selected_tab += 1;
-				if (UI_box.selected_tab >= 3)
+				if (UI_box.selected_tab >= 4)
 					UI_box.selected_tab = 0;
 			}
 		}
@@ -927,6 +961,14 @@ class ChartingState extends MusicBeatState
 					daBPM = _song.notes[i].bpm;
 			Conductor.changeBPM(daBPM);
 		}
+		/*switch(_song.maina){
+			case 4:
+				gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
+			case 5:
+				gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 10, GRID_SIZE * 16);
+		} */
+		//remove(gridBG);
+		//add(gridBG);
 
 		/* // PORT BULLSHIT, INCASE THERE'S NO SUSTAIN DATA FOR A NOTE
 			for (sec in 0..._song.notes.length)
@@ -949,7 +991,12 @@ class ChartingState extends MusicBeatState
 			var daSus = i[2];
 			var isDeath = i[3];
 			var daType = i[4];
-			var note:Note = new Note(daStrumTime, daNoteInfo % 4);
+			var note:Note;
+			if(_song.maina == 4){
+				note = new Note(daStrumTime, daNoteInfo % 4);
+			}else{
+				note = new Note(daStrumTime, daNoteInfo % 5);
+			}
 			note.sustainLength = daSus;
 			//note.daType = daType;
 			//note.isDeath = isDeath;
@@ -991,9 +1038,16 @@ class ChartingState extends MusicBeatState
 
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData)
-			{
-				curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
+			if(_song.maina == 4){
+				if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData)
+				{
+					curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
+				}	
+			}else if(_song.maina == 5){
+				if (i.strumTime == note.strumTime && i.noteData % 5 == note.noteData)
+				{
+					curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
+				}		
 			}
 
 			swagNum += 1;
@@ -1007,10 +1061,18 @@ class ChartingState extends MusicBeatState
 	{
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if (i[0] == note.strumTime && i[1] % 4 == note.noteData)
-			{
-				FlxG.log.add('FOUND EVIL NUMBER');
-				_song.notes[curSection].sectionNotes.remove(i);
+			if(_song.maina == 4){
+				if (i[0] == note.strumTime && i[1] % 4 == note.noteData)
+				{
+					FlxG.log.add('FOUND EVIL NUMBER');
+					_song.notes[curSection].sectionNotes.remove(i);
+				}
+			}else if (_song.maina == 5){
+				if (i[0] == note.strumTime && i[1] % 5 == note.noteData)
+				{
+					FlxG.log.add('FOUND EVIL NUMBER');
+					_song.notes[curSection].sectionNotes.remove(i);
+				}
 			}
 		}
 
