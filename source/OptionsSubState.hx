@@ -12,7 +12,7 @@ import flixel.addons.transition.FlxTransitionableState;
 
 class OptionsSubState extends MusicBeatSubstate
 {
-	var textMenuItems:Array<String> = ['Controls', 'Preferences', 'Back'];
+	var textMenuItems:Array<String> = ['Controls', 'Preferences', 'Gameplay', 'Back'];
 
 	var selector:FlxSprite;
 	var curSelected:Int = 0;
@@ -89,11 +89,10 @@ class OptionsSubState extends MusicBeatSubstate
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxG.state.closeSubState();
 					FlxG.state.openSubState(new Options());
-				/*case "Gameplay":
+				case "Gameplay":
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxG.state.closeSubState();
 					FlxG.state.openSubState(new GameplaySubState());
-				*/
 				case "Back":
 					FlxG.sound.play(Paths.sound('confirmMenu'));
 					FlxG.switchState(new MainMenuState());

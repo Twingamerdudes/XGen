@@ -125,7 +125,7 @@ class TweenV {
  */
 class SndTV {
 	static var DEFAULT_DURATION = DateTools.seconds(1);
-	public var fps 				= CoolUtil.coolTextFileString(Paths.txt('options/fps'));
+	public var fps 				= /*CoolUtil.coolTextFileString(Paths.txt('options/fps') */ 10;
 	public var isDebug			= false;
 
 	var tlist					: hxd.Stack<TweenV>;

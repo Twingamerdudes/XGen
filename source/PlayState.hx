@@ -42,6 +42,7 @@ import openfl.display.BlendMode;
 import openfl.display.StageQuality;
 import openfl.filters.ShaderFilter;
 import flixel.input.keyboard.FlxKey;
+import flixel.group.FlxSpriteGroup;
 import Options;
 using StringTools;
 
@@ -64,6 +65,7 @@ class PlayState extends MusicBeatState
 	private var boyfriend:Boyfriend;
 
 	private var notes:FlxTypedGroup<Note>;
+	private var objects:FlxSpriteGroup;
 	private var unspawnNotes:Array<Note> = [];
 
 	private var strumLine:FlxSprite;
@@ -188,6 +190,11 @@ class PlayState extends MusicBeatState
 					} */
 				}
 			}			
+	}
+	function animBG(asset:FlxSprite){
+		new FlxTimer().start(0.1, function(tmr:FlxTimer){
+			asset.animation.play('anim');
+		}, 0);
 	}
 	function customNotePress(noteType:String){
 		try{
@@ -375,7 +382,7 @@ class PlayState extends MusicBeatState
 		                  var streetBehind:FlxSprite = new FlxSprite(-40, 50).loadGraphic(Paths.image('philly/behindTrain'));
 		                  add(streetBehind);
 
-	                          phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train'));
+	                      phillyTrain = new FlxSprite(2000, 360).loadGraphic(Paths.image('philly/train'));
 		                  add(phillyTrain);
 
 		                  trainSound = new FlxSound().loadEmbedded(Paths.sound('train_passes'));
@@ -640,30 +647,101 @@ class PlayState extends MusicBeatState
 		          }
 		          default:
 		          {
-		                  defaultCamZoom = 0.9;
-		                  curStage = 'stage';
-		                  var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
-		                  bg.antialiasing = true;
-		                  bg.scrollFactor.set(0.9, 0.9);
-		                  bg.active = false;
-		                  add(bg);
+					  if(SONG.song.toLowerCase() == 'bopeebo' || SONG.song.toLowerCase() == 'fresh' || SONG.song.toLowerCase() == 'dadbattle' || SONG.song.toLowerCase() == 'tutorial'){
+						defaultCamZoom = 0.9;
+						curStage = 'stage';
+						var bg:FlxSprite = new FlxSprite(-600, -200).loadGraphic(Paths.image('stageback'));
+						bg.antialiasing = true;
+						bg.scrollFactor.set(0.9, 0.9);
+						bg.active = false;
+						add(bg);
 
-		                  var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
-		                  stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
-		                  stageFront.updateHitbox();
-		                  stageFront.antialiasing = true;
-		                  stageFront.scrollFactor.set(0.9, 0.9);
-		                  stageFront.active = false;
-		                  add(stageFront);
+						var stageFront:FlxSprite = new FlxSprite(-650, 600).loadGraphic(Paths.image('stagefront'));
+						stageFront.setGraphicSize(Std.int(stageFront.width * 1.1));
+						stageFront.updateHitbox();
+						stageFront.antialiasing = true;
+						stageFront.scrollFactor.set(0.9, 0.9);
+						stageFront.active = false;
+						add(stageFront);
 
-		                  var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
-		                  stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
-		                  stageCurtains.updateHitbox();
-		                  stageCurtains.antialiasing = true;
-		                  stageCurtains.scrollFactor.set(1.3, 1.3);
-		                  stageCurtains.active = false;
 
-		                  add(stageCurtains);
+						var stageCurtains:FlxSprite = new FlxSprite(-500, -300).loadGraphic(Paths.image('stagecurtains'));
+						stageCurtains.setGraphicSize(Std.int(stageCurtains.width * 0.9));
+						stageCurtains.updateHitbox();
+						stageCurtains.antialiasing = true;
+						stageCurtains.scrollFactor.set(1.3, 1.3);
+						stageCurtains.active = false;
+
+						add(stageCurtains);
+					}else{
+						var stageAssets = CoolUtil.coolTextFile(Paths.txt('stages/' + SONG.stage + "/" +  SONG.stage));
+						curStage = SONG.stage;
+						var tags:Array<String> = [];
+						var widths:Array<String> = [];
+						var heights:Array<String> = [];
+						if(stageAssets[0].contains("camZoom:")){
+							trace(stageAssets[0].substring(9));
+							defaultCamZoom = Std.parseFloat(stageAssets[0].substring(9));
+						} 
+						//defaultCamZoom = 0.9;
+						for(i in 0...stageAssets.length){
+							if(stageAssets[i].contains("add:")){
+								var asset:FlxSprite = new FlxSprite(Std.parseFloat(stageAssets[i].substring(stageAssets[i].indexOf(',') + 1, stageAssets[i].lastIndexOf(','))), Std.parseFloat(stageAssets[i].substring(stageAssets[i].lastIndexOf(',') + 1))).loadGraphic(Paths.image('stages/' + SONG.stage + '/' + stageAssets[i].substring(5, stageAssets[i].indexOf(','))));
+								asset.antialiasing = true;
+								if(stageAssets[i + 1].contains("scrollFactor:")){
+									asset.scrollFactor.set(Std.parseFloat(stageAssets[i + 1].substring(14, stageAssets[i + 1].indexOf(','))), Std.parseFloat(stageAssets[i + 1].substring(stageAssets[i + 1].indexOf(',') + 1)));
+								}else{
+									asset.scrollFactor.set(0.9, 0.9);
+								}
+								tags.push(stageAssets[i].substring(5, stageAssets[i].indexOf(',')));
+								widths.push(Std.string(asset.width));
+								heights.push(Std.string(asset.height));
+								if(stageAssets[i + 2].contains("GraphicSize:")){
+									asset.setGraphicSize(Std.parseInt(stageAssets[i + 2].substring(13)));
+									/*for(v in 0...stageAssets.length){
+										if(stageAssets[i + 2].substring(13).contains(tags[v])){
+											asset.setGraphicSize(Std.parseInt(widths[tags.indexOf(tags[v])]));
+											break;
+										}
+									} */
+								}
+								//asset.scrollFactor.set(0.9, 0.9);
+								asset.active = false;
+								asset.updateHitbox();
+								add(asset);
+							}
+							/*if(stageAssets[i].contains("addAnimatedSprite:")){
+								trace(Paths.getSparrowAtlas('stages/' + SONG.stage + '/' + stageAssets[i].substring(19, stageAssets[i].indexOf(','))));
+								var asset:FlxSprite = new FlxSprite(Std.parseFloat(stageAssets[i].substring(stageAssets[i].indexOf(',') + 1, stageAssets[i].lastIndexOf(','))), Std.parseFloat(stageAssets[i].substring(stageAssets[i].lastIndexOf(',') + 1)));
+								asset.antialiasing = true;
+								asset.frames = Paths.getSparrowAtlas('stages/' + SONG.stage + '/' + stageAssets[i].substring(19, stageAssets[i].indexOf(',')));
+								asset.animation.addByPrefix('anim', 'animation', 24, false);
+								if(stageAssets[i + 1].contains("scrollFactor:")){
+									trace("x: " + stageAssets[i + 1].substring(14, stageAssets[i + 1].indexOf(',')) + " y: " + stageAssets[i + 1].substring(stageAssets[i + 1].indexOf(',') + 1));
+									asset.scrollFactor.set(Std.parseFloat(stageAssets[i + 1].substring(14, stageAssets[i + 1].indexOf(','))), Std.parseFloat(stageAssets[i + 1].substring(stageAssets[i + 1].indexOf(',') + 1)));
+								}else{
+									asset.scrollFactor.set(0.9, 0.9);
+								}
+								tags.push(stageAssets[i].substring(19, stageAssets[i].indexOf(',')));
+								widths.push(Std.string(asset.width));
+								heights.push(Std.string(asset.height));
+								if(stageAssets[i + 2].contains("GraphicSize:")){
+									asset.setGraphicSize(Std.parseInt(stageAssets[i + 2].substring(13)));
+									for(v in 0...stageAssets.length){
+										if(stageAssets[i + 2].substring(13).contains(tags[v])){
+											asset.setGraphicSize(Std.parseInt(widths[tags.indexOf(tags[v])]));
+											break;
+										}
+									} 
+								} 
+								//asset.scrollFactor.set(0.9, 0.9);
+								asset.active = false;
+								asset.updateHitbox();
+								animBG(asset);
+								add(asset);
+							} */
+						}
+					}
 		          }
               }
 
@@ -870,6 +948,17 @@ class PlayState extends MusicBeatState
 		iconP2.y = healthBar.y - (iconP2.height / 2);
 		add(iconP2);
 
+		objects = new FlxSpriteGroup(0, 0);
+		add(objects);
+
+		var beatEventSettings:Array<String> = [];
+		/*try{
+			beatEventSettings  = CoolUtil.coolTextFile(Paths.txt(SONG.song.toLowerCase() + '/beatEvent-Settings'));
+		}catch(e){
+			beatEventSettings[0] = null;
+			trace("Could not find beatEvent-Settings");
+		} */
+
 		strumLineNotes.cameras = [camHUD];
 		notes.cameras = [camHUD];
 		healthBar.cameras = [camHUD];
@@ -877,6 +966,9 @@ class PlayState extends MusicBeatState
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
+		/*if(beatEventSettings[0] == "objects are on HUD: true"){
+			objects.cameras = [camHUD];
+		} */
 		//timerTxt.cameras = [camHUD];
 		gradeTxt.cameras = [camHUD];
 		songNameTxt.cameras = [camHUD];
@@ -1039,6 +1131,7 @@ class PlayState extends MusicBeatState
 
 		generateStaticArrows(0);
 		generateStaticArrows(1);
+
 
 		talking = false;
 		startedCountdown = true;
@@ -1413,6 +1506,7 @@ class PlayState extends MusicBeatState
 			babyArrow.x += ((FlxG.width / 2) * player);
 
 			strumLineNotes.add(babyArrow);
+
 			new FlxTimer().start(2, function(tmr:FlxTimer){
 				if(hidden == true || PlayState.SONG.notes[Std.int(curStep / 16)].arrowsHidden){
 					babyArrow.alpha = 0;
@@ -1579,7 +1673,7 @@ class PlayState extends MusicBeatState
 		}
 		var timeList:Array<String>;
 		//timerTxt.text = /*Std.string(Date.fromTime(songLength)) */ time;
-		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.5";
+		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.6";
 		accurayTxt.text = "Accuracy: %" + songAccuracy;
 		comboBreaksTxt.text = "Combo breaks: " + songComboBreaks;
 
@@ -1642,9 +1736,12 @@ class PlayState extends MusicBeatState
 		/* if (FlxG.keys.justPressed.NINE)
 			FlxG.switchState(new Charting()); */
 
-		#if debug
+		
 		if (FlxG.keys.justPressed.EIGHT)
 			FlxG.switchState(new AnimationDebug(SONG.player2));
+		#if debug
+		if (FlxG.keys.justPressed.SIX)
+			FlxG.switchState(new OffsetEditor(SONG.player2));
 		#end
 
 		if (startingSong)
@@ -2841,8 +2938,11 @@ class PlayState extends MusicBeatState
 		}
 		try{
 			var beatEvents = CoolUtil.coolTextFile(Paths.txt(curSong.toLowerCase() + '/beatEvent'));
+			var objectsAdded:Array<String> = [];
+			var lastestObject:String = "";
 			for(i in 0...beatEvents.length){
 				if(beatEvents[i].contains(Std.string(curBeat))){
+					trace(i);
 					/*if(beatEvents[i].contains("dad =")){
 						dad = null;
 						dad = new Character(100, 100, beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
@@ -2910,8 +3010,28 @@ class PlayState extends MusicBeatState
 						hidden = true;
 					}
 					if(beatEvents[i].contains("showArrows")){
-						hidden = false;
+						hidden = false;					}
+					/*if(beatEvents[i].contains("addPng:")){
+						var sprite:FlxSprite = new FlxSprite();
+						//trace(Paths.imageJpg(SONG.song.toLowerCase() + '/' + beatEvents[i].substring(10, beatEvents[i].indexOf(','))));
+						//trace('X: ' + beatEvents[i].substring(beatEvents[i].indexOf(',') + 2, beatEvents[i].lastIndexOf(',')) + ' Y: ' + beatEvents[i].substring(beatEvents[i].lastIndexOf(',') + 2));
+						sprite.loadGraphic(Paths.image(SONG.song.toLowerCase() + '/' + beatEvents[i].substring(10, beatEvents[i].indexOf(','))), 'shared');
+						sprite.x = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf(',') + 2, beatEvents[i].lastIndexOf(',')));
+						sprite.y = Std.parseFloat(beatEvents[i].substring(beatEvents[i].lastIndexOf(',') + 2));
+						objects.add(sprite);
+						objectsAdded.push(Std.string(sprite));
 					}
+					if(beatEvents[i].contains("addJpg:") && !objectsAdded.contains(beatEvents[i].substring(10, beatEvents[i].indexOf(',')))){
+						var sprite:FlxSprite = new FlxSprite();
+						//trace(Paths.imageJpg(SONG.song.toLowerCase() + '/' + beatEvents[i].substring(10, beatEvents[i].indexOf(','))));
+						//trace('X: ' + beatEvents[i].substring(beatEvents[i].indexOf(',') + 2, beatEvents[i].lastIndexOf(',')) + ' Y: ' + beatEvents[i].substring(beatEvents[i].lastIndexOf(',') + 2));
+						sprite.loadGraphic(Paths.imageJpg(SONG.song.toLowerCase() + '/' + beatEvents[i].substring(10, beatEvents[i].indexOf(','))), 'shared');
+						sprite.x = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf(',') + 2, beatEvents[i].lastIndexOf(',')));
+						sprite.y = Std.parseFloat(beatEvents[i].substring(beatEvents[i].lastIndexOf(',') + 2));
+						objects.add(sprite);
+						objectsAdded.push(beatEvents[i].substring(10, beatEvents[i].indexOf(',')));
+						trace(sprite);
+					} */
 					/*if(beatEvents[i].contains("anim.bf.")){
 						trace(beatEvents[i].substring(beatEvents[i].indexOf('.') + 4));
 						boyfriend.playAnim(beatEvents[i].substring(beatEvents[i].indexOf('.') + 4), true);

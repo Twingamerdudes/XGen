@@ -30,6 +30,16 @@ class CoolUtil
 
 		return daThing;
 	}
+	public static function coolTextFileExport(path:Array<String>):String{
+		var daString:String = "";
+		var daList:Array<String> = path;
+
+		for(i in 0...daList.length){
+			daString = daString + daList[i] + '\n';
+		}
+
+		return daString;
+	}
 	public static function numberArray(max:Int, ?min = 0):Array<Int>
 	{
 		var dumbArray:Array<Int> = [];

@@ -134,7 +134,8 @@ class ChartingState extends MusicBeatState
 				validScore: false,
 				healthDrain: 0,
 				healthCheck: true,
-				maina: 4
+				maina: 4,
+				stage: "stage"
 			};
 		}
 
@@ -300,14 +301,23 @@ class ChartingState extends MusicBeatState
 		{
 			_song.player2 = characters[Std.parseInt(character)];
 		});
+		var stages = CoolUtil.coolTextFile(Paths.txt('stages/stageList'));
+		var stageDropDown = new FlxUIDropDownMenu(400, 280, FlxUIDropDownMenu.makeStrIdLabelArray(stages, true), function(stage:String)
+		{
+			_song.stage = stages[Std.parseInt(stage)];
+		});
 
-		mainaNumber = new FlxUINumericStepper(140, 160, 1 , 1, 4, 5, 0);
+		var stageTxt:FlxUIText = new FlxUIText(400, 260, 250, "Stages");
+
+		stageDropDown.selectedLabel = _song.stage;
+
+		mainaNumber = new FlxUINumericStepper(400, 160, 1 , 1, 4, 5, 0);
 		mainaNumber.value = _song.maina;
 		mainaNumber.name = 'mainaStepper';
 
-		var mainaTxt:FlxUIText = new FlxUIText(140, 140, 200, "Maina [BETA]");
+		var mainaTxt:FlxUIText = new FlxUIText(400, 140, 200, "Maina [BETA]");
 
-		var mainaWaringTxt:FlxUIText = new FlxUIText(140, 180, 150, "WARING: changing this value WILL reset the chart editor and will erase what you have charting so far.");
+		var mainaWaringTxt:FlxUIText = new FlxUIText(400, 180, 150, "WARING: changing this value WILL reset the chart editor and will erase what you have charting so far.");
 
 		player2DropDown.selectedLabel = _song.player2;
 
@@ -328,6 +338,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(player2DropDown);
 		tab_group_song.add(mainaWaringTxt);
 		tab_group_song.add(mainaTxt);
+		tab_group_song.add(stageDropDown);
+		tab_group_song.add(stageTxt);
 
 		UI_box.addGroup(tab_group_song);
 		UI_box.scrollFactor.set();

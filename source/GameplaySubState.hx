@@ -23,13 +23,8 @@ class GameplaySubState extends FlxSubState
 
     var fpsCounter:Alphabet;
 
-
-	var botplayOnOrOff:String = "On";
-	var ghostTappingOnOrOff:String = "On";
-
-	var botplayOnOrOffCurrent:String = Assets.getText(Paths.txt('options/botplay'));
-	var ghostTappingOnOrOffCurrent:String = Assets.getText(Paths.txt('options/ghost'));
-
+	var FPS:Int = Std.parseInt(CoolUtil.coolTextFileString(Paths.txt('options/fps')));
+	var fpsText:FlxText;
 
 	public static var MUSICBEATSTATE:MusicBeatState;
 	public function new()
@@ -43,9 +38,6 @@ class GameplaySubState extends FlxSubState
 		selector = new FlxSprite().makeGraphic(5, 5, FlxColor.RED);
 		add(selector);
 
-        fpsCounter = new Alphabet(100, 120, CoolUtil.coolTextFileString(Paths.txt('options/fps')));
-        add(fpsCounter);
-
 		for (i in 0...textMenuItems.length)
 		{
 			var optionText:Alphabet = new Alphabet(20, 20 + (i * 100), textMenuItems[i], true, false);
@@ -57,6 +49,10 @@ class GameplaySubState extends FlxSubState
             trace(optionText.text);
 			grpOptionsTexts.add(optionText);
 		}
+		fpsText = new FlxText(950, 30, 0, "", 80);
+		fpsText.setFormat(Paths.font("phantommuffin.ttf"), 80, FlxColor.WHITE, RIGHT);
+		fpsText.scrollFactor.set();
+		add(fpsText);
 		/*botplayOptionsEnabledTxt = new Alphabet(400, 70, "", false, false);
 		botplayOptionsEnabledTxt.scrollFactor.set();
 		add(botplayOptionsEnabledTxt);
@@ -102,14 +98,8 @@ class GameplaySubState extends FlxSubState
 			grpOptionsTexts.forEach(function(txt:Alphabet)
 			{
 				txt.color = FlxColor.WHITE;
-				var optionsFileBot:String = Assets.getText(Paths.txt('options/botplay'));
-				var optionsFileGhost:String = Assets.getText(Paths.txt('options/ghost'));
 				if (txt.ID == curSelected)
 					txt.color = FlxColor.YELLOW;
-				else if(txt.ID == 0 && optionsFileGhost == "ghost")
-					txt.color = FlxColor.GREEN;
-				else if(txt.ID == 1 && optionsFileBot == "botplay")
-					txt.color = FlxColor.GREEN;
 				else {
 					txt.color = FlxColor.WHITE;
 				}
@@ -117,48 +107,31 @@ class GameplaySubState extends FlxSubState
 			if (MUSICBEATSTATE.controls.ACCEPT)
 			{
 				switch (textMenuItems[curSelected])
-				{
-					case "Botplay":
-						FlxG.sound.play(Paths.sound('confirmMenu'));
-						var optionsFile:String = Assets.getText(Paths.txt('options/botplay'));
-						trace(optionsFile);
-						if(optionsFile != "botplay"){
-							trace("here");
-							optionsFile = "botplay";
-							sys.io.File.saveContent(Paths.txt('options/botplay'), optionsFile);
-						}else{
-							trace("should be removed");
-							optionsFile = "";
-							sys.io.File.saveContent(Paths.txt('options/botplay'), optionsFile);
-						}
-						if(optionsFile == "botplay"){
-							botplayOnOrOff = "On";
-						}else{
-							botplayOnOrOff = "Off";
-						} 
-						//botplayOptionsEnabledTxt.text = botplayOnOrOff;
-					case "Ghost Tapping":
-						FlxG.sound.play(Paths.sound('confirmMenu'));
-						var optionsFile:String = Assets.getText(Paths.txt('options/ghost'));
-						trace(optionsFile);
-						if(optionsFile != "ghost"){
-							trace("here");
-							optionsFile = "ghost";
-							sys.io.File.saveContent(Paths.txt('options/ghost'), optionsFile);
-						}else{
-							trace("should be removed");
-							optionsFile = "";
-							sys.io.File.saveContent(Paths.txt('options/ghost'), optionsFile);
-						}
-						if(optionsFile == "ghost"){
-							ghostTappingOnOrOff = "On";
-						}else{
-							ghostTappingOnOrOff= "Off";
-						} 
-						//ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
+				{	
 					case "Back":
 						FlxG.sound.play(Paths.sound('confirmMenu'));
 						FlxG.state.openSubState(new OptionsSubState());
+					case "Note colors":
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						FlxG.state.openSubState(new NoteColorSubState());
+				}
+			}
+			fpsText.text = "FPS: " + Std.string(FPS);
+			if(MUSICBEATSTATE.controls.LEFT){
+				if(textMenuItems[curSelected] == "FPS"){
+					FPS -= 1;
+					sys.io.File.saveContent(Paths.txt('options/fps'), Std.string(FPS));
+					FlxG.updateFramerate = Std.parseInt(CoolUtil.coolTextFileString(Paths.txt('options/fps')));
+					FlxG.drawFramerate = Std.parseInt(CoolUtil.coolTextFileString(Paths.txt('options/fps')));
+					
+				}
+			}
+			if(MUSICBEATSTATE.controls.RIGHT){
+				if(textMenuItems[curSelected] == "FPS"){
+					FPS += 1;
+					sys.io.File.saveContent(Paths.txt('options/fps'), Std.string(FPS));
+					FlxG.updateFramerate = Std.parseInt(CoolUtil.coolTextFileString(Paths.txt('options/fps')));
+					FlxG.drawFramerate = Std.parseInt(CoolUtil.coolTextFileString(Paths.txt('options/fps')));
 				}
 			}
 		}
@@ -180,9 +153,6 @@ class GameplaySubState extends FlxSubState
 		{
 			item.targetY = stuff - curSelected;
 			stuff ++;
-
-            fpsCounter.targetY = stuff - curSelected;
-		    stuff ++;
 
 			if (item.targetY == 0)
 				item.alpha = 1;

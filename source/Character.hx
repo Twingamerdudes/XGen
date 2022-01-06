@@ -1,5 +1,6 @@
 package;
 
+import Song.SwagSong;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.animation.FlxBaseAnimation;
@@ -19,6 +20,8 @@ class Character extends FlxSprite
 
 	var loadedCharacter:Bool = false;
 	var char:String;
+
+	var SONG:SwagSong;
 
 	public function new(x:Float, y:Float, ?character:String = "bf", ?isPlayer:Bool = false)
 	{
@@ -529,12 +532,17 @@ class Character extends FlxSprite
 			animation.addByPrefix('singLEFT', 'left0', 24, false);
 			animation.addByPrefix('singRIGHT', 'right', 24, false);
 
-
-			addOffset('idle');
-			addOffset("singUP", -47, 24);
-			addOffset("singRIGHT", -1, -23);
-			addOffset("singLEFT", -30, 16);
-			addOffset("singDOWN", -31, -29);
+			var offsets:Array<String> = [];
+			try{
+				offsets = CoolUtil.coolTextFile(Paths.txt('characters/offsets/$curCharacter'));
+			}catch(e){
+				trace('Offset does not exist');
+			}
+			addOffset('idle', Std.parseFloat(offsets[0]), Std.parseFloat(offsets[1]));
+			addOffset("singLEFT", Std.parseFloat(offsets[2]), Std.parseFloat(offsets[3]));
+			addOffset("singDOWN", Std.parseFloat(offsets[4]), Std.parseFloat(offsets[5]));
+			addOffset("singUP", Std.parseFloat(offsets[6]), Std.parseFloat(offsets[7]));
+			addOffset("singRIGHT", Std.parseFloat(offsets[8]), Std.parseFloat(offsets[9]));
 
 			playAnim('idle');
 		}

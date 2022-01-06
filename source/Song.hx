@@ -21,6 +21,8 @@ typedef SwagSong =
 	var validScore:Bool;
 	var healthDrain:Float;
 	var healthCheck:Bool;
+
+	var stage:String;
 }
 
 class Song
@@ -30,6 +32,7 @@ class Song
 	public var bpm:Int;
 	public var needsVoices:Bool = true;
 	public var speed:Float = 1;
+	public var stage:String = "stage";
 
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
