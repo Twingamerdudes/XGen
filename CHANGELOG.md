@@ -1,4 +1,8 @@
 # Changelog
+## 1/6/2022
+- Softcoded stages
+- Softcoded offsets for characters
+- Relased first version of XGen for 2022
 ## 12/22/2021
 - Softcoded characters
 - Added custom notes
