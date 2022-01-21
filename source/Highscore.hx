@@ -68,6 +68,20 @@ class Highscore
 			daSong += '-easy';
 		else if (diff == 2)
 			daSong += '-hard';
+		else{
+			var bannedDifficulties:Array<String> = ['EASY', 'NORMAL', 'HARD'];
+			var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
+			try{
+				for(i in 0...difficulties.length){
+					if(difficulties[i] != bannedDifficulties[i] && difficulties.indexOf(difficulties[i]) == diff){
+						daSong += '-' + difficulties[i].toLowerCase();
+					}
+				}
+			}catch(e){
+				trace("Failed to load shit");
+			}
+		}
+			
 
 		return daSong;
 	}

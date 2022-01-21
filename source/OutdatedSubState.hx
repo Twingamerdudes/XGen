@@ -45,6 +45,9 @@ class OutdatedSubState extends MusicBeatState
 } */
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -68,6 +71,11 @@ class OutdatedSubState extends MusicBeatState
 	override function create()
 	{
 		super.create();
+
+		#if desktop
+		DiscordClient.changePresence("Outdated peasent", null);
+		#end
+		
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.imageJpg('bruh2', 'shared'));
 		bg.scale.x *= 1.55;
 		bg.scale.y *= 1.55;

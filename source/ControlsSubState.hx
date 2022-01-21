@@ -1,5 +1,8 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -30,6 +33,9 @@ class ControlsSubState extends MusicBeatSubstate
 	{
 		super();
 		
+		#if desktop
+		DiscordClient.changePresence("In Options Menu", null);
+		#end
 		
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
 		add(grpOptionsTexts);

@@ -15,6 +15,7 @@ import flixel.addons.ui.FlxUIDropDownMenu;
 import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUINumericStepper;
 import flixel.addons.ui.FlxUITabMenu;
+import flixel.addons.ui.FlxUIInputText;
 import flixel.addons.ui.FlxUITooltip.FlxUITooltipStyle;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
@@ -88,7 +89,7 @@ class ChartingState extends MusicBeatState
 	{
 		curSection = lastSection;
 		if(PlayState.SONG != null){
-			switch(PlayState.SONG.maina){
+			switch(PlayState.SONG.mania){
 				case 4:
 					gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 				case 5:
@@ -134,7 +135,7 @@ class ChartingState extends MusicBeatState
 				validScore: false,
 				healthDrain: 0,
 				healthCheck: true,
-				maina: 4,
+				mania: 4,
 				stage: "stage"
 			};
 		}
@@ -149,7 +150,7 @@ class ChartingState extends MusicBeatState
 		// sections = _song.notes;
 
 
-		loadSong(_song.song);
+		loadSong(_song.song.replace(' ', '-'));
 		Conductor.changeBPM(_song.bpm);
 		Conductor.mapBPMChanges(_song);
 
@@ -173,10 +174,10 @@ class ChartingState extends MusicBeatState
 		UI_box = new FlxUITabMenu(null, tabs, true);
 
 		UI_box.resize(300, 400);
-		if(_song.maina == 4){
+		if(_song.mania == 4){
 			UI_box.x = FlxG.width / 2;
 			UI_box.y = 20;
-		}else if(_song.maina == 5){
+		}else if(_song.mania == 5){
 			UI_box.x = FlxG.width / 2 + 90;
 			UI_box.y = 20;
 		}
@@ -221,11 +222,23 @@ class ChartingState extends MusicBeatState
 		});
 
 		var arrowHideText:FlxUIText = new FlxUIText(150, 10, 500, "Arrow hide", 8, true);
-		arrowHideText.name = 'health_drain_text';
+		arrowHideText.name = 'arrow_hide_text';
 
 		check_arrowsHidden = new FlxUICheckBox(150, 30, null, null, "Arrows Hidden", 100);
 		check_arrowsHidden.name = 'check_arrowsHidden';
 		check_arrowsHidden.checked = _song.notes[curSection].arrowsHidden;
+
+		/*var goalsTxt:FlxUIText = new FlxUIText(20, 120, 500, "Goals", 8, true);
+		goalsTxt.name = 'goals_text';
+
+		var goalsInput:FlxUIInputText = new FlxUIInputText(20, 150, 100, Std.string(SONG.goals).substring(Std.string(SONG.goals).indexOf('['), Std.string(SONG.goals).indexOf(']')), 8);
+		goalsInput.name = 'goals_input';
+
+		var applyButton2:FlxButton = new FlxButton(20, 190, "Apply", function()
+		{
+			var goalsSeprated:Array<String> = CoolUtil.spiltText(goalsInput.text, ',');
+			_song.goals = goalsSeprated;
+		}); */
 
 		tab_group_note.add(drainTxt);
 		tab_group_note.add(drain);
@@ -233,14 +246,17 @@ class ChartingState extends MusicBeatState
 		tab_group_note.add(check_healthCheck);
 		tab_group_note.add(check_arrowsHidden);
 		tab_group_note.add(arrowHideText);
+		//tab_group_note.add(goalsTxt);
+		//tab_group_note.add(goalsInput);
+		//tab_group_note.add(applyButton2);
 
 		UI_box.addGroup(tab_group_note);
 	}
-	var mainaNumber:FlxUINumericStepper;
+	var maniaNumber:FlxUINumericStepper;
 
 	function addSongUI():Void
 	{
-		var UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
+		var UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song.replace(' ', '-'), 8);
 		typingShit = UI_songTitle;
 
 		var check_voices = new FlxUICheckBox(10, 25, null, null, "Has voice track", 100);
@@ -271,7 +287,7 @@ class ChartingState extends MusicBeatState
 
 		var reloadSong:FlxButton = new FlxButton(saveButton.x + saveButton.width + 10, saveButton.y, "Reload Audio", function()
 		{
-			loadSong(_song.song);
+			loadSong(_song.song.replace(' ', '-'));
 		});
 
 		var reloadSongJson:FlxButton = new FlxButton(reloadSong.x, saveButton.y + 30, "Reload JSON", function()
@@ -311,13 +327,13 @@ class ChartingState extends MusicBeatState
 
 		stageDropDown.selectedLabel = _song.stage;
 
-		mainaNumber = new FlxUINumericStepper(400, 160, 1 , 1, 4, 5, 0);
-		mainaNumber.value = _song.maina;
-		mainaNumber.name = 'mainaStepper';
+		maniaNumber = new FlxUINumericStepper(400, 160, 1 , 1, 4, 5, 0);
+		maniaNumber.value = _song.mania;
+		maniaNumber.name = 'maniaStepper';
 
-		var mainaTxt:FlxUIText = new FlxUIText(400, 140, 200, "Maina [BETA]");
+		var maniaTxt:FlxUIText = new FlxUIText(400, 140, 200, "mania [BETA]");
 
-		var mainaWaringTxt:FlxUIText = new FlxUIText(400, 180, 150, "WARING: changing this value WILL reset the chart editor and will erase what you have charting so far.");
+		var maniaWaringTxt:FlxUIText = new FlxUIText(400, 180, 150, "WARING: changing this value WILL reset the chart editor and will erase what you have charting so far.");
 
 		player2DropDown.selectedLabel = _song.player2;
 
@@ -326,7 +342,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(UI_songTitle);
 
 		tab_group_song.add(check_voices);
-		tab_group_song.add(mainaNumber);
+		tab_group_song.add(maniaNumber);
 		tab_group_song.add(check_mute_inst);
 		tab_group_song.add(saveButton);
 		tab_group_song.add(reloadSong);
@@ -336,8 +352,8 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(stepperSpeed);
 		tab_group_song.add(player1DropDown);
 		tab_group_song.add(player2DropDown);
-		tab_group_song.add(mainaWaringTxt);
-		tab_group_song.add(mainaTxt);
+		tab_group_song.add(maniaWaringTxt);
+		tab_group_song.add(maniaTxt);
 		tab_group_song.add(stageDropDown);
 		tab_group_song.add(stageTxt);
 
@@ -431,7 +447,7 @@ class ChartingState extends MusicBeatState
 		check_isDeath.name = "check_deathNote";
 
 		var noteTypesLabel:FlxUIText = new FlxUIText(10, 30, 500, "Note types", 8, true);
-		noteTypesLabel.name = 'health_drain_text';
+		noteTypesLabel.name = 'note_types_text';
 
 		var noteTypes = CoolUtil.coolTextFile(Paths.txt('custom_notes/notesList'));
 		var noteTypeDropDown = new FlxUIDropDownMenu(10, 50, FlxUIDropDownMenu.makeStrIdLabelArray(noteTypes, true), function(noteType:String)
@@ -563,8 +579,8 @@ class ChartingState extends MusicBeatState
 				_song.notes[curSection].bpm = Std.int(nums.value);
 				updateGrid();
 			}
-			else if(wname == 'mainaStepper'){
-				_song.maina = Std.int(nums.value);
+			else if(wname == 'maniaStepper'){
+				_song.mania = Std.int(nums.value);
 				for(i in 0..._song.notes.length){
 					_song.notes[i].sectionNotes = [];
 				}
@@ -605,7 +621,9 @@ class ChartingState extends MusicBeatState
 		curStep = recalculateSteps();
 
 		Conductor.songPosition = FlxG.sound.music.time;
-		_song.song = typingShit.text;
+		var txtShit:String = typingShit.text.replace(' ', '-');
+		//_song.song = typingShit.text;
+		_song.song = txtShit;
 
 		strumLine.y = getYfromStrum((Conductor.songPosition - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps));
 
@@ -973,7 +991,7 @@ class ChartingState extends MusicBeatState
 					daBPM = _song.notes[i].bpm;
 			Conductor.changeBPM(daBPM);
 		}
-		/*switch(_song.maina){
+		/*switch(_song.mania){
 			case 4:
 				gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * 16);
 			case 5:
@@ -1004,7 +1022,7 @@ class ChartingState extends MusicBeatState
 			var isDeath = i[3];
 			var daType = i[4];
 			var note:Note;
-			if(_song.maina == 4){
+			if(_song.mania == 4){
 				note = new Note(daStrumTime, daNoteInfo % 4);
 			}else{
 				note = new Note(daStrumTime, daNoteInfo % 5);
@@ -1050,12 +1068,12 @@ class ChartingState extends MusicBeatState
 
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if(_song.maina == 4){
+			if(_song.mania == 4){
 				if (i.strumTime == note.strumTime && i.noteData % 4 == note.noteData)
 				{
 					curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
 				}	
-			}else if(_song.maina == 5){
+			}else if(_song.mania == 5){
 				if (i.strumTime == note.strumTime && i.noteData % 5 == note.noteData)
 				{
 					curSelectedNote = _song.notes[curSection].sectionNotes[swagNum];
@@ -1073,13 +1091,13 @@ class ChartingState extends MusicBeatState
 	{
 		for (i in _song.notes[curSection].sectionNotes)
 		{
-			if(_song.maina == 4){
+			if(_song.mania == 4){
 				if (i[0] == note.strumTime && i[1] % 4 == note.noteData)
 				{
 					FlxG.log.add('FOUND EVIL NUMBER');
 					_song.notes[curSection].sectionNotes.remove(i);
 				}
-			}else if (_song.maina == 5){
+			}else if (_song.mania == 5){
 				if (i[0] == note.strumTime && i[1] % 5 == note.noteData)
 				{
 					FlxG.log.add('FOUND EVIL NUMBER');

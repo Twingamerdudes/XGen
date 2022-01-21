@@ -191,10 +191,14 @@ class StoryMenuState extends MusicBeatState
 
 		sprDifficulty = new FlxSprite(leftArrow.x + 130, leftArrow.y);
 		sprDifficulty.frames = ui_tex;
-		sprDifficulty.animation.addByPrefix('easy', 'EASY');
+		var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
+		for(i in 0...difficulties.length){
+			sprDifficulty.animation.addByPrefix(difficulties[i].toLowerCase(), difficulties[i].toUpperCase());
+		}
+		/*sprDifficulty.animation.addByPrefix('easy', 'EASY');
 		sprDifficulty.animation.addByPrefix('normal', 'NORMAL');
-		sprDifficulty.animation.addByPrefix('hard', 'HARD');
-		sprDifficulty.animation.play('easy');
+		sprDifficulty.animation.addByPrefix('hard', 'HARD'); */
+		sprDifficulty.animation.play(difficulties[0]);
 		changeDifficulty();
 
 		difficultySelectors.add(sprDifficulty);
@@ -321,6 +325,20 @@ class StoryMenuState extends MusicBeatState
 					diffic = '-easy';
 				case 2:
 					diffic = '-hard';
+				default:
+					var bannedDifficulties:Array<String> = ['EASY', 'NORMAL', 'HARD'];
+					var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
+					try{
+						for(i in 0...difficulties.length){
+							trace(difficulties[i].toLowerCase());
+							trace(!difficulties[i].contains(bannedDifficulties[i]) && difficulties.indexOf(difficulties[i]) == curDifficulty);
+							if(difficulties[i] != bannedDifficulties[i] && difficulties.indexOf(difficulties[i]) == curDifficulty){
+								diffic = '-' + difficulties[i].toLowerCase();
+							}
+						}
+					}catch(e){
+						trace("Failed to load shit");
+					}
 			}
 
 			PlayState.storyDifficulty = curDifficulty;
@@ -339,12 +357,16 @@ class StoryMenuState extends MusicBeatState
 	{
 		curDifficulty += change;
 
+		var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
 		if (curDifficulty < 0)
-			curDifficulty = 2;
-		if (curDifficulty > 2)
+			curDifficulty = difficulties.length - 1;
+		if (curDifficulty > difficulties.length - 1)
 			curDifficulty = 0;
 
 		sprDifficulty.offset.x = 0;
+		
+		sprDifficulty.scale.x = 1;
+		sprDifficulty.scale.y = 1;
 
 		switch (curDifficulty)
 		{
@@ -357,6 +379,24 @@ class StoryMenuState extends MusicBeatState
 			case 2:
 				sprDifficulty.animation.play('hard');
 				sprDifficulty.offset.x = 20;
+			default:
+				var bannedDifficulties:Array<String> = ['EASY', 'NORMAL', 'HARD'];
+				try{
+					for(i in 0...difficulties.length){
+						if(difficulties[i] != bannedDifficulties[i] && difficulties.indexOf(difficulties[i]) == curDifficulty){
+							var difficultyOffsets = CoolUtil.coolTextFile(Paths.txt('difficulties/' + difficulties[i].toLowerCase() + '/offsets'));
+							var difficultyScaleOffsets = CoolUtil.coolTextFile(Paths.txt('difficulties/' + difficulties[i].toLowerCase() + '/scaleOffsets'));
+							trace(sprDifficulty.scale);
+							sprDifficulty.animation.play(difficulties[i].toLowerCase());
+							sprDifficulty.offset.x = Std.parseFloat(difficultyOffsets[0]);
+							sprDifficulty.offset.y = Std.parseFloat(difficultyOffsets[1]);
+							sprDifficulty.scale.x = Std.parseFloat(difficultyScaleOffsets[0]);
+							sprDifficulty.scale.y = Std.parseFloat(difficultyScaleOffsets[1]);
+						}
+					}
+				}catch(e){
+					trace("Failed to load shit");
+				}
 		}
 
 		sprDifficulty.alpha = 0;

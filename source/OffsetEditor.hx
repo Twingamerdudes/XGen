@@ -1,5 +1,8 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -27,6 +30,10 @@ class OffsetEditor extends MusicBeatState{
     }
     override function create(){
         FlxG.sound.music.stop();
+
+        #if desktop
+		DiscordClient.changePresence("Debugging offsets", null);
+		#end
 
         character = new Character(0, 0, char);
         character.screenCenter();

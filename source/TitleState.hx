@@ -24,6 +24,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSave;
 //import io.newgrounds.NG;
 import lime.app.Application;
 import openfl.Assets;
@@ -55,6 +56,14 @@ class TitleState extends MusicBeatState
 
 		curWacky = FlxG.random.getObject(getIntroTextShit());
 
+		var save = new FlxSave();
+		save.bind("AchivementData");
+		if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+			save.data.achivementsGotten = null;
+			save.data.achivementsGotten = new Array<String>();
+			save.flush();
+		}
+
 		// DEBUG BULLSHIT
 
 		super.create();
@@ -66,9 +75,11 @@ class TitleState extends MusicBeatState
 		trace('NEWGROUNDS LOL');
 		#end */
 
-		FlxG.save.bind('funkin', 'ninjamuffin99');
+		FlxG.save.bind('XGen', 'twingamerdudes');
 
 		Highscore.load();
+
+		CoolUtil.difficultyArray =  CoolUtil.coolTextFile(Paths.txt('difficulties'));
 
 		if (FlxG.save.data.weekUnlocked != null)
 		{
@@ -277,8 +288,20 @@ class TitleState extends MusicBeatState
 			//NGio.unlockMedal(60960);
 
 			// If it's Friday according to da clock
-			if (Date.now().getDay() == 5)
-				//NGio.unlockMedal(61034);
+			var save = new FlxSave();
+			save.bind("AchivementData");
+			trace(Date.now().getDay());
+			trace(Date.now().getDay() == 5 && !save.data.achivementsGotten.contains("Friday Night"));
+			if (Date.now().getDay() == 5 && !save.data.achivementsGotten.contains("Friday Night")){
+				FlxG.sound.play(Paths.sound('cancelMenu'), 0.7);
+				if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+					save.data.achivementsGotten = null;
+					save.data.achivementsGotten = new Array<String>();
+				}
+				save.data.achivementsGotten.push("Friday Night");
+
+				save.flush();
+			}
 			#end
 
 			FlxG.camera.flash(FlxColor.WHITE, 1);

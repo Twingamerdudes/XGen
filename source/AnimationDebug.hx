@@ -1,5 +1,8 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -8,7 +11,7 @@ import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-
+import MusicBeatState;
 /**
 	*DEBUG MODE
  */
@@ -24,6 +27,7 @@ class AnimationDebug extends FlxState
 	var isDad:Bool = true;
 	var daAnim:String = 'spooky';
 	var camFollow:FlxObject;
+	var beatState:MusicBeatState;
 
 	public function new(daAnim:String = 'spooky')
 	{
@@ -34,6 +38,10 @@ class AnimationDebug extends FlxState
 	override function create()
 	{
 		FlxG.sound.music.stop();
+
+		#if desktop
+		DiscordClient.changePresence("Debugging animations", null);
+		#end
 
 		var gridBG:FlxSprite = FlxGridOverlay.create(10, 10);
 		gridBG.scrollFactor.set(0.5, 0.5);
@@ -117,6 +125,10 @@ class AnimationDebug extends FlxState
 			FlxG.camera.zoom += 0.25;
 		if (FlxG.keys.justPressed.Q)
 			FlxG.camera.zoom -= 0.25;
+
+		if(beatState.controls.BACK){
+            FlxG.switchState(new MainMenuState());
+        }
 
 		if (FlxG.keys.pressed.I || FlxG.keys.pressed.J || FlxG.keys.pressed.K || FlxG.keys.pressed.L)
 		{

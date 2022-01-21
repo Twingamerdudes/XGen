@@ -168,7 +168,7 @@ class Note extends FlxSprite
 				}else if(isDeath == true || daType == "Death"){
 
 
-					if(PlayState.SONG.maina == 5){
+					if(PlayState.SONG.mania == 5){
 						frames = Paths.getSparrowAtlas('NOTE_assets');
 
 						animation.addByPrefix('greenScroll', 'kill');
@@ -222,7 +222,7 @@ class Note extends FlxSprite
 					antialiasing = true;
 				}
 		}
-		switch(PlayState.SONG.maina){
+		switch(PlayState.SONG.mania){
 			case 4:
 				switch (noteData)
 				{
@@ -270,7 +270,7 @@ class Note extends FlxSprite
 			alpha = 0.6;
 
 			x += width / 2;
-			switch(PlayState.SONG.maina){
+			switch(PlayState.SONG.mania){
 				case 4:
 					switch (noteData)
 					{
@@ -311,7 +311,7 @@ class Note extends FlxSprite
 
 			if (prevNote.isSustainNote)
 			{
-				switch(PlayState.SONG.maina){
+				switch(PlayState.SONG.mania){
 					case 4:
 						switch (prevNote.noteData)
 						{

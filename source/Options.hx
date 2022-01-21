@@ -1,5 +1,8 @@
 package;
 
+#if desktop
+import Discord.DiscordClient;
+#end
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxSubState;
@@ -8,9 +11,10 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import MusicBeatState;
 import lime.utils.Assets;
+import flixel.util.FlxSave;
 class Options extends FlxSubState
 {
-	var textMenuItems:Array<String> = ['Ghost Tapping', 'Botplay', 'Back'];
+	var textMenuItems:Array<String> = ['Ghost Tapping', 'Botplay', 'EARSE DATA', 'Back'];
 
 	var selector:FlxSprite;
 	var curSelected:Int = 0;
@@ -33,6 +37,10 @@ class Options extends FlxSubState
 	{
 		super();
 		
+		#if desktop
+		DiscordClient.changePresence("In Options Menu", null);
+		#end
+
 		grpOptionsTexts = new FlxTypedGroup<Alphabet>();
 		add(grpOptionsTexts);
 
@@ -99,6 +107,8 @@ class Options extends FlxSubState
 				var optionsFileGhost:String = Assets.getText(Paths.txt('options/ghost'));
 				if (txt.ID == curSelected)
 					txt.color = FlxColor.YELLOW;
+				else if (txt.ID == 2)
+					txt.color = FlxColor.RED;
 				else if(txt.ID == 0 && optionsFileGhost == "ghost")
 					txt.color = FlxColor.GREEN;
 				else if(txt.ID == 1 && optionsFileBot == "botplay")
@@ -148,6 +158,22 @@ class Options extends FlxSubState
 						}else{
 							ghostTappingOnOrOff= "Off";
 						} 
+					case "EARSE DATA":
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						sys.io.File.saveContent(Paths.txt('options/ghost'), "ghost");
+						ghostTappingOnOrOff = "On";
+						sys.io.File.saveContent(Paths.txt('options/botplay'), "");
+						botplayOnOrOff = "Off";
+						var save = new FlxSave();
+						save.bind("AchivementData");
+						save.data.achivementsGotten = [""];
+						save.flush();
+						sys.io.File.saveContent(Paths.txt('options/keybinds/left'), 'A');
+						sys.io.File.saveContent(Paths.txt('options/keybinds/down'), 'S');
+						sys.io.File.saveContent(Paths.txt('options/keybinds/up'), 'W');
+						sys.io.File.saveContent(Paths.txt('options/keybinds/right'), 'D');
+						FlxG.updateFramerate = 60;
+						FlxG.drawFramerate = 60;
 						//ghostTappingEnabledTxt.text = ghostTappingOnOrOff;
 					case "Back":
 						FlxG.sound.play(Paths.sound('confirmMenu'));

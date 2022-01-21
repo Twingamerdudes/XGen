@@ -103,6 +103,14 @@ class MainMenuState extends MusicBeatState
 		versionShit.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 
+		var achievementText:FlxText;
+
+		achievementText = new FlxText(1030, FlxG.height - 18, 0, "Press A to acess your achievements", 12);
+		achievementText.setFormat(Paths.font("phantommuffin.ttf"), 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		achievementText.scrollFactor.set();
+		achievementText.borderSize = 2.4;
+		add(achievementText);
+
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
@@ -117,6 +125,10 @@ class MainMenuState extends MusicBeatState
 		if (FlxG.sound.music.volume < 0.8)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
+		}
+
+		if(FlxG.keys.pressed.A){
+			FlxG.switchState(new AchivementState());
 		}
 
 		if (!selectedSomethin)

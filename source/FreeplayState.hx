@@ -258,11 +258,12 @@ class FreeplayState extends MusicBeatState
 
 	function changeDiff(change:Int = 0)
 	{
+		var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
 		curDifficulty += change;
 
 		if (curDifficulty < 0)
-			curDifficulty = 2;
-		if (curDifficulty > 2)
+			curDifficulty = difficulties.length - 1;
+		if (curDifficulty > difficulties.length - 1)
 			curDifficulty = 0;
 
 		#if !switch
@@ -277,6 +278,19 @@ class FreeplayState extends MusicBeatState
 				diffText.text = 'NORMAL';
 			case 2:
 				diffText.text = "HARD";
+			default:
+				var bannedDifficulties:Array<String> = ['EASY', 'NORMAL', 'HARD'];
+				try{
+					for(i in 0...difficulties.length){
+						trace(difficulties[i].toLowerCase());
+						trace(!difficulties[i].contains(bannedDifficulties[i]) && difficulties.indexOf(difficulties[i]) == curDifficulty);
+						if(difficulties[i] != bannedDifficulties[i] && difficulties.indexOf(difficulties[i]) == curDifficulty){
+							diffText.text = difficulties[i];
+						}
+					}
+				}catch(e){
+					trace("Failed to load shit");
+				}
 		}
 	}
 
@@ -304,7 +318,7 @@ class FreeplayState extends MusicBeatState
 		#end
 
 		#if PRELOAD_ALL
-		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName), 0);
+		FlxG.sound.playMusic(Paths.inst(songs[curSelected].songName.replace(' ', '-')), 0);
 		#end
 
 		var bullShit:Int = 0;

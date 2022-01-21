@@ -36,6 +36,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import flixel.util.FlxSave;
 import haxe.Json;
 import lime.utils.Assets;
 import openfl.display.BlendMode;
@@ -119,7 +120,7 @@ class PlayState extends MusicBeatState
 	var bgGirls:BackgroundGirls;
 	var wiggleShit:WiggleEffect = new WiggleEffect();
 
-	public var maina:Int = SONG.maina;
+	public var mania:Int = SONG.mania;
 
 	var talking:Bool = true;
 	var songScore:Int = 0;
@@ -191,11 +192,30 @@ class PlayState extends MusicBeatState
 				}
 			}			
 	}
-	function animBG(asset:FlxSprite){
-		new FlxTimer().start(0.1, function(tmr:FlxTimer){
-			asset.animation.play('anim');
-		}, 0);
-	}
+	/*function addGoals(){
+		var BG:FlxSprite;
+		var label:FlxText;
+		var goalsText:FlxTypedGroup<FlxText>;
+		BG = new FlxSprite(0, 0).makeGraphic(Std.int(FlxG.width / 4), Std.int(FlxG.height / 2) + 500, 0xFF000000);
+		BG.x = FlxG.width - BG.width;
+		BG.alpha = 0.25;
+		add(BG);
+
+		label = new FlxText(965, 100, "Goals:", 30);
+		label.setFormat(Paths.font("vcr.ttf"), 70, FlxColor.WHITE, RIGHT);
+		label.scrollFactor.set();
+		add(label);
+
+		goalsText = new FlxTypedGroup<FlxText>();
+		add(goalsText);
+
+		for (i in 0...SONG.goals.length)
+		{
+			var goal:FlxText = new FlxText(20, 20 + (i * 50), 0, SONG.goals[i], 10);
+			goal.ID = i;
+			goalsText.add(goal);
+		}
+	} */
 	function customNotePress(noteType:String){
 		try{
 			var noteEvents = CoolUtil.coolTextFile(Paths.txt('custom_notes/$noteType/$noteType-pressed'));
@@ -236,9 +256,9 @@ class PlayState extends MusicBeatState
 }
 	override public function create()
 	{
-		if(maina < 3 || maina > 5){
-			maina = 4;
-			SONG.maina = 4;
+		if(mania < 3 || mania > 5){
+			mania = 4;
+			SONG.mania = 4;
 		}
 		FlxG.mouse.visible = false;
 		if (FlxG.sound.music != null)
@@ -300,6 +320,24 @@ class PlayState extends MusicBeatState
 				storyDifficultyText = "Normal";
 			case 2:
 				storyDifficultyText = "Hard";
+			default:
+				var bannedDifficulties:Array<String> = ['EASY', 'NORMAL', 'HARD'];
+				var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
+				try{
+					for(i in 0...difficulties.length){
+						trace(difficulties[i].toLowerCase());
+						trace(!difficulties[i].contains(bannedDifficulties[i]) && difficulties.indexOf(difficulties[i]) == storyDifficulty);
+						if(difficulties[i] != bannedDifficulties[i] && difficulties.indexOf(difficulties[i]) == storyDifficulty){
+							var name:String = difficulties[i].toLowerCase();
+							var name2 = name;
+							name = name.substring(0,0);
+							name += name2.substring(1);
+							storyDifficultyText = name;
+						}
+					}
+				}catch(e){
+					trace("Failed to load shit");
+				}
 		}
 
 		iconRPC = SONG.player2;
@@ -332,7 +370,7 @@ class PlayState extends MusicBeatState
 		DiscordClient.changePresence(detailsText, SONG.song + " (" + storyDifficultyText + ")" + "\nScore: " + songScore, iconRPC);
 		#end
 
-		switch (SONG.song.toLowerCase())
+		switch (SONG.song.toLowerCase().replace(' ', '-'))
 		{
                         case 'spookeez' | 'monster' | 'south': 
                         {
@@ -1242,7 +1280,7 @@ class PlayState extends MusicBeatState
 		lastReportedPlayheadPosition = 0;
 
 		if (!paused)
-			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
+			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song.replace(' ', '-')), 1, false);
 		FlxG.sound.music.onComplete = endSong;
 		vocals.play();
 
@@ -1267,7 +1305,7 @@ class PlayState extends MusicBeatState
 		curSong = songData.song;
 
 		if (SONG.needsVoices)
-			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song));
+			vocals = new FlxSound().loadEmbedded(Paths.voices(PlayState.SONG.song.replace(' ', '-')));
 		else
 			vocals = new FlxSound();
 
@@ -1292,9 +1330,9 @@ class PlayState extends MusicBeatState
 			{
 				var daStrumTime:Float = songNotes[0];
 				var daNoteData:Int = 0;
-				if(SONG.maina == 4){
+				if(SONG.mania == 4){
 					daNoteData = Std.int(songNotes[1] % 4);
-				}else if(SONG.maina == 5){
+				}else if(SONG.mania == 5){
 					daNoteData = Std.int(songNotes[1] % 5);
 				}
 
@@ -1311,7 +1349,7 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;	
 				var swagNote:Note;		
-				//if(SONG.maina == 4)	{
+				//if(SONG.mania == 4)	{
 				swagNote = new Note(daStrumTime, daNoteData, oldNote, null, songNotes[3], songNotes[4]);
 				//}else{
 					//if(daNoteData < 4){
@@ -1373,7 +1411,7 @@ class PlayState extends MusicBeatState
 
 	private function generateStaticArrows(player:Int):Void
 	{
-		for (i in 0...maina)
+		for (i in 0...mania)
 		{
 			// FlxG.log.add(i);
 			var babyArrow:FlxSprite = new FlxSprite(0, strumLine.y);
@@ -1425,7 +1463,7 @@ class PlayState extends MusicBeatState
 
 					babyArrow.antialiasing = true;
 					babyArrow.setGraphicSize(Std.int(babyArrow.width * 0.7));
-					switch(maina){
+					switch(mania){
 						case 4:
 							switch (Math.abs(i))
 							{
@@ -1632,6 +1670,18 @@ class PlayState extends MusicBeatState
 				iconP1.animation.play(SONG.player1);
 			else
 				iconP1.animation.play('bf-old');
+			var save = new FlxSave();
+			save.bind("AchivementData");
+			if(!save.data.achivementsGotten.contains("Time Traveler")){
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+				if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+					save.data.achivementsGotten = null;
+					save.data.achivementsGotten = new Array<String>();
+				}
+				save.data.achivementsGotten.push("Time Traveler");
+
+				save.flush();
+			}
 		}
 		switch (curStage)
 		{
@@ -1896,6 +1946,21 @@ class PlayState extends MusicBeatState
 			persistentDraw = false;
 			paused = true;
 
+			var save = new FlxSave();
+			save.bind("AchivementData");
+			if(!save.data.achivementsGotten.contains("Blue balls")){
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+				if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+					save.data.achivementsGotten = null;
+					save.data.achivementsGotten = new Array<String>();
+				}
+				save.data.achivementsGotten.push("Blue balls");
+
+				save.flush();
+			}
+
+			save.flush();
+
 			vocals.stop();
 			FlxG.sound.music.stop();
 
@@ -2038,6 +2103,23 @@ class PlayState extends MusicBeatState
 
 	function endSong():Void
 	{
+		if(storyDifficultyText == "Hard"){
+			var save = new FlxSave();
+			save.bind("AchivementData");
+			if(!save.data.achivementsGotten.contains("Hardcore")){
+				FlxG.sound.play(Paths.sound('confirmMenu'));
+				if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+					save.data.achivementsGotten = null;
+					save.data.achivementsGotten = new Array<String>();
+				}
+				save.data.achivementsGotten.push("Hardcore");
+
+				save.flush();
+			}
+
+			save.flush();
+		}
+		
 		canPause = false;
 		FlxG.sound.music.volume = 0;
 		vocals.volume = 0;
@@ -2046,6 +2128,41 @@ class PlayState extends MusicBeatState
 			#if !switch
 			Highscore.saveScore(SONG.song, songScore, storyDifficulty);
 			#end
+		}
+		var achievementsList:Array<String> = CoolUtil.coolTextFile(Paths.txt('achivementsList'));
+		var defaultAchievemnts:Array<String> = ["Friday Night", "Ez", "Spooky", "Go pico", "Simp", "Christmas cheer", "Weeb", "Hardcore", "Blue balls", "Time Traveler"];
+		var save = new FlxSave();
+		save.bind("AchivementData");
+		for(i in 0...achievementsList.length){
+			try{
+				if(!achievementsList.contains(defaultAchievemnts[i])){
+					var achievementName = achievementsList[i];
+					trace(achievementName);
+					var achievementGoal = CoolUtil.coolTextFileString(Paths.txt('achievements/$achievementName/$achievementName-goal'));
+					if(achievementGoal.contains("difficulty ==") && storyDifficultyText.toLowerCase() == achievementGoal.substring(14).toLowerCase() && !save.data.achivementsGotten.contains(achievementName)){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push(achievementName);
+	
+						save.flush();
+					}
+					if(achievementGoal.contains("SongCompleted ==") && SONG.song == achievementGoal.substring(17) && !save.data.achivementsGotten.contains(achievementName)){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push(achievementName);
+	
+						save.flush();
+					}
+				}
+			}catch(e){
+				trace("Fuck");
+			}
 		}
 
 		if (isStoryMode)
@@ -2060,6 +2177,133 @@ class PlayState extends MusicBeatState
 
 				transIn = FlxTransitionableState.defaultTransIn;
 				transOut = FlxTransitionableState.defaultTransOut;
+
+				if(storyWeek == 1){
+					var save = new FlxSave();
+					save.bind("AchivementData");
+					if(!save.data.achivementsGotten.contains("Ez")){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push("Ez");
+	
+						save.flush();
+					}
+				}
+				if(storyWeek == 2){
+					var save = new FlxSave();
+					save.bind("AchivementData");
+					if(!save.data.achivementsGotten.contains("Spooky")){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push("Spooky");
+	
+						save.flush();
+					}
+				}
+				if(storyWeek == 3){
+					var save = new FlxSave();
+					save.bind("AchivementData");
+					if(!save.data.achivementsGotten.contains("Go pico")){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push("Go pico");
+	
+						save.flush();
+					}
+				}
+				if(storyWeek == 4){
+					var save = new FlxSave();
+					save.bind("AchivementData");
+					if(!save.data.achivementsGotten.contains("Simp")){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push("Simp");
+	
+						save.flush();
+					}
+				}
+				if(storyWeek == 5){
+					var save = new FlxSave();
+					save.bind("AchivementData");
+					if(!save.data.achivementsGotten.contains("Christmas cheer")){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push("Christmas cheer");
+
+						save.flush();
+					}
+				}
+				
+				if(storyWeek == 6){
+					var save = new FlxSave();
+					save.bind("AchivementData");
+					if(!save.data.achivementsGotten.contains("Weeb")){
+						FlxG.sound.play(Paths.sound('confirmMenu'));
+						if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+							save.data.achivementsGotten = null;
+							save.data.achivementsGotten = new Array<String>();
+						}
+						save.data.achivementsGotten.push("Weeb");
+	
+						save.flush();
+					}
+				}
+				var achievementsList:Array<String> = CoolUtil.coolTextFile(Paths.txt('achivementsList'));
+				var defaultAchievemnts:Array<String> = ["Friday Night", "Ez", "Spooky", "Go pico", "Simp", "Christmas cheer", "Weeb", "Hardcore", "Blue balls", "Time Traveler"];
+				var save = new FlxSave();
+				save.bind("AchivementData");
+				for(i in 0...achievementsList.length){
+					if(!achievementsList.contains(defaultAchievemnts[i])){
+						var achievementName = achievementsList[i];
+						var achievementGoal = CoolUtil.coolTextFileString(Paths.txt('achievements/$achievementName/$achievementName-goal'));
+						if(achievementGoal.contains("difficulty ==") && storyDifficultyText.toLowerCase() == achievementGoal.substring(14).toLowerCase() && !save.data.achivementsGotten.contains(achievementName)){
+							FlxG.sound.play(Paths.sound('confirmMenu'));
+							if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+								save.data.achivementsGotten = null;
+								save.data.achivementsGotten = new Array<String>();
+							}
+							save.data.achivementsGotten.push(achievementName);
+	
+							save.flush();
+						}
+						if(achievementGoal.contains("SongCompleted ==") && SONG.song.toLowerCase() == achievementGoal.substring(17).toLowerCase() && !save.data.achivementsGotten.contains(achievementName)){
+							FlxG.sound.play(Paths.sound('confirmMenu'));
+							if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+								save.data.achivementsGotten = null;
+								save.data.achivementsGotten = new Array<String>();
+							}
+							save.data.achivementsGotten.push(achievementName);
+	
+							save.flush();
+						}
+						if(achievementGoal.contains("WeekCompleted ==") && Std.string(storyWeek) == achievementGoal.substring(17) && !save.data.achivementsGotten.contains(achievementName)){
+							FlxG.sound.play(Paths.sound('confirmMenu'));
+							if(save.data.achivementsGotten == null || save.data.achivementsGotten == ""){
+								save.data.achivementsGotten = null;
+								save.data.achivementsGotten = new Array<String>();
+							}
+							save.data.achivementsGotten.push(achievementName);
+	
+							save.flush();
+						}
+					}
+				}
+				
 
 				FlxG.switchState(new StoryMenuState());
 
@@ -2081,9 +2325,23 @@ class PlayState extends MusicBeatState
 
 				if (storyDifficulty == 0)
 					difficulty = '-easy';
-
-				if (storyDifficulty == 2)
+				else if (storyDifficulty == 2)
 					difficulty = '-hard';
+				else{
+					var bannedDifficulties:Array<String> = ['EASY', 'NORMAL', 'HARD'];
+					var difficulties = CoolUtil.coolTextFile(Paths.txt('difficulties'));
+					try{
+						for(i in 0...difficulties.length){
+							trace(difficulties[i].toLowerCase());
+							trace(!difficulties[i].contains(bannedDifficulties[i]) && difficulties.indexOf(difficulties[i]) == storyDifficulty);
+							if(difficulties[i] != bannedDifficulties[i] && difficulties.indexOf(difficulties[i]) == storyDifficulty){
+								difficulty = '-' + difficulties[i].toLowerCase();
+							}
+						}
+					}catch(e){
+						trace("Failed to load shit");
+					}
+				}
 
 				trace('LOADING NEXT SONG');
 				trace(PlayState.storyPlaylist[0].toLowerCase() + difficulty);
@@ -2405,9 +2663,9 @@ class PlayState extends MusicBeatState
 		var leftR = controls.LEFT_R;
 
 		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
-		if(SONG.maina == 4){
+		if(SONG.mania == 4){
 			controlArray = [leftP, downP, upP, rightP];
-		}else if(SONG.maina == 5){
+		}else if(SONG.mania == 5){
 			controlArray = [leftP, downP, FlxG.keys.pressed.SPACE, upP, rightP];
 		}
 
@@ -2518,7 +2776,7 @@ class PlayState extends MusicBeatState
 			notes.forEachAlive(function(daNote:Note)
 			{
 				if (daNote.canBeHit && daNote.mustPress && daNote.isSustainNote)
-				{	if(SONG.maina == 4){
+				{	if(SONG.mania == 4){
 						switch (daNote.noteData)
 						{
 							// NOTES YOU ARE HOLDING
@@ -2535,7 +2793,7 @@ class PlayState extends MusicBeatState
 								if (right)
 									goodNoteHit(daNote);
 						}
-					}else if(SONG.maina == 5){
+					}else if(SONG.mania == 5){
 						switch (daNote.noteData)
 						{
 							// NOTES YOU ARE HOLDING
@@ -2568,7 +2826,7 @@ class PlayState extends MusicBeatState
 		}
 		playerStrums.forEach(function(spr:FlxSprite)
 		{
-			switch(SONG.maina){
+			switch(SONG.mania){
 				case 4:
 					switch (spr.ID)
 					{
@@ -2710,7 +2968,7 @@ class PlayState extends MusicBeatState
 				noteMiss(2, isDeath, noteType);
 			if (rightP)
 				noteMiss(3, isDeath, noteType);
-			if(SONG.maina == 5 && FlxG.keys.pressed.SPACE)
+			if(SONG.mania == 5 && FlxG.keys.pressed.SPACE)
 				noteMiss(2, isDeath, noteType);		
 		}
 	}
@@ -2731,9 +2989,9 @@ class PlayState extends MusicBeatState
 		var customNote:Array<String> = null;
 		var noteType = note.daType;
 		var daNoteData:Int = 0;
-		if(SONG.maina == 4){
+		if(SONG.mania == 4){
 			daNoteData = Std.int(note.noteData % 4);
-		}else if(SONG.maina == 5){
+		}else if(SONG.mania == 5){
 			daNoteData = Std.int(note.noteData % 5);
 		}
 		try{
@@ -2776,7 +3034,7 @@ class PlayState extends MusicBeatState
 						boyfriend.playAnim('singDOWN', true);
 				}
 		
-				if(SONG.maina == 4){
+				if(SONG.mania == 4){
 					playerStrums.forEach(function(spr:FlxSprite)
 					{
 						if (Math.abs(note.noteData) == spr.ID)
@@ -3000,6 +3258,55 @@ class PlayState extends MusicBeatState
 					if(beatEvents[i].contains("drain =")){
 						SONG.healthDrain = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
 					}
+					/*if(beatEvents[i].contains("==")){
+						trace(beatEvents[i].substring(2, beatEvents[i].indexOf('=')));
+						trace(beatEvents[i].substring(beatEvents[i].indexOf('=') + 3));
+						var ifStatmentArgs1:String = beatEvents[i].substring(2, beatEvents[i].indexOf('='));
+						var ifStatmentArgs2:String = beatEvents[i].substring(beatEvents[i].indexOf('=') + 3);
+						var args1:Dynamic = "";
+						var args2:Dynamic = "";
+						args1 = ifStatmentArgs1;
+						switch(args1){
+							case "comboBreaks":
+								args1 = songComboBreaks;
+							case "grade":
+								trace("Should set to grade");
+								args1 = songGrade;
+							case "accuracy":
+								args1 = songAccuracy;
+							case "score":
+								args1 = songScore; 
+							case "drain":
+								args1 = SONG.healthDrain;
+							case "health":
+								args1 = health;
+							case "mania":
+								args1 = SONG.mania;
+						}
+						args2 = ifStatmentArgs2;
+						switch(args2){
+							case "comboBreaks":
+								args2 = songComboBreaks;
+							case "grade":
+								args2 = songGrade;
+							case "accuracy":
+								args2 = songAccuracy;
+							case "score":
+								args2 = songScore; 
+							case "drain":
+								args2 = SONG.healthDrain;
+							case "health":
+								args2 = health;
+							case "mania":
+								args2 = SONG.mania;
+						}
+						trace(args1);
+						trace(args2);
+						if(args1 == args2){
+							trace('They are equal');
+							doBeatEvent(beatEvents[i + 1].substring(4));
+						}
+					} */
 					if(beatEvents[i].contains("healthCheck") && !beatEvents[i].contains('!')){
 						SONG.healthCheck = true;
 					}
