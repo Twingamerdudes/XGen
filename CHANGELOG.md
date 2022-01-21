@@ -1,4 +1,7 @@
 # Changelog
+## 1/21/2022
+- Softcoded difficulties
+- Added achievements
 ## 1/5/2022
 - Softcoded stages
 - Softcoded offsets for characters
