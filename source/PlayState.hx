@@ -3258,55 +3258,6 @@ class PlayState extends MusicBeatState
 					if(beatEvents[i].contains("drain =")){
 						SONG.healthDrain = Std.parseFloat(beatEvents[i].substring(beatEvents[i].indexOf('=') + 2));
 					}
-					/*if(beatEvents[i].contains("==")){
-						trace(beatEvents[i].substring(2, beatEvents[i].indexOf('=')));
-						trace(beatEvents[i].substring(beatEvents[i].indexOf('=') + 3));
-						var ifStatmentArgs1:String = beatEvents[i].substring(2, beatEvents[i].indexOf('='));
-						var ifStatmentArgs2:String = beatEvents[i].substring(beatEvents[i].indexOf('=') + 3);
-						var args1:Dynamic = "";
-						var args2:Dynamic = "";
-						args1 = ifStatmentArgs1;
-						switch(args1){
-							case "comboBreaks":
-								args1 = songComboBreaks;
-							case "grade":
-								trace("Should set to grade");
-								args1 = songGrade;
-							case "accuracy":
-								args1 = songAccuracy;
-							case "score":
-								args1 = songScore; 
-							case "drain":
-								args1 = SONG.healthDrain;
-							case "health":
-								args1 = health;
-							case "mania":
-								args1 = SONG.mania;
-						}
-						args2 = ifStatmentArgs2;
-						switch(args2){
-							case "comboBreaks":
-								args2 = songComboBreaks;
-							case "grade":
-								args2 = songGrade;
-							case "accuracy":
-								args2 = songAccuracy;
-							case "score":
-								args2 = songScore; 
-							case "drain":
-								args2 = SONG.healthDrain;
-							case "health":
-								args2 = health;
-							case "mania":
-								args2 = SONG.mania;
-						}
-						trace(args1);
-						trace(args2);
-						if(args1 == args2){
-							trace('They are equal');
-							doBeatEvent(beatEvents[i + 1].substring(4));
-						}
-					} */
 					if(beatEvents[i].contains("healthCheck") && !beatEvents[i].contains('!')){
 						SONG.healthCheck = true;
 					}
@@ -3317,7 +3268,12 @@ class PlayState extends MusicBeatState
 						hidden = true;
 					}
 					if(beatEvents[i].contains("showArrows")){
-						hidden = false;					}
+						hidden = false;					
+					}
+					if(beatEvents[i].contains("playSound:")){
+						trace(beatEvents[i].substring(13));
+						FlxG.sound.play(Paths.sound(beatEvents[i].substring(13)));
+					}
 					/*if(beatEvents[i].contains("addPng:")){
 						var sprite:FlxSprite = new FlxSprite();
 						//trace(Paths.imageJpg(SONG.song.toLowerCase() + '/' + beatEvents[i].substring(10, beatEvents[i].indexOf(','))));
