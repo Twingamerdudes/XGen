@@ -22,7 +22,7 @@ Now run this shit and we are done with that:
 `haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons`
 also do it in a terminal/cmd.
 
-Also for %72 who use windows, you gotta get VS 2019 and install this shit on it
+Also for 72% who use windows, you gotta get VS 2019 and install this shit on it
 - MSVC v142 - VS 2019 C++ x64/x86 build tools
 - Windows SDK (10.0.17763.0)
 ### Compiling
