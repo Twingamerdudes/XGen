@@ -1723,7 +1723,7 @@ class PlayState extends MusicBeatState
 		}
 		var timeList:Array<String>;
 		//timerTxt.text = /*Std.string(Date.fromTime(songLength)) */ time;
-		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.6";
+		songNameTxt.text = "Playing: " + SONG.song + " on XGen 0.0.7";
 		accurayTxt.text = "Accuracy: %" + songAccuracy;
 		comboBreaksTxt.text = "Combo breaks: " + songComboBreaks;
 
